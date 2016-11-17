@@ -81,8 +81,8 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 #blockfile.close()
 
 for i in range(2):
-    stroop_cond('red','blue','red','green', 'left',win,1)
-    message = visual.TextStim(win, text='Hello World!')
+    stroop_cond('red','blue','red','green', 'left',win,2)
+    message = visual.TextStim(win, text='+')
     message.draw()
     win.flip()
     core.wait(1.0)
