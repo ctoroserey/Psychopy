@@ -1,5 +1,10 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
+""" To do:
+    - find out how to log the data properly, and trim further
+    - remove Quit_stroop
+    - Trim further """
+
     ### I don't get GitHub
     ### Or maybe...
     ### See if these imports can be done globally. In any case, the overhead is negligible.
@@ -14,9 +19,8 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     import sys  # to get file system encoding
     import csv
 
-    #globalClock = core.Clock()  # to track the time since experiment started
-    routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
-    stroopClock = core.Clock()
+
+    # Stimuli
     target = visual.TextStim(win=win,name='target',height=0.2);
     circleLeft = visual.Polygon(win=win,units='cm',edges=1000,size=(2, 2),pos=(-4, -4))
     circleRight = visual.Polygon(win=win,units='cm',edges=1000, size=(2, 2),pos=(4, -4))
@@ -24,6 +28,9 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     # ------Prepare to start Routine "stroop"-------
 
     t = 0
+    endExpNow = False # putative global quit, kept there because PsychoPy acts up when removed
+    routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
+    stroopClock = core.Clock()
     stroopClock.reset()  # clock
     continueRoutine = True
     routineTimer.add(length)
@@ -33,7 +40,7 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     response = event.BuilderKeyResponse()
     circleLeft.setFillColor(rgbOne)
     circleRight.setFillColor(rgbTwo)
-    Quit_stroop = event.BuilderKeyResponse()
+    Quit_stroop = event.BuilderKeyResponse() # delete this and use 'response' instead.
     # keep track of which components have finished
     stroopComponents = [target, response, circleLeft, circleRight, Quit_stroop]
     for thisComponent in stroopComponents:
@@ -43,28 +50,33 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     # -------Start Routine "stroop"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
-        endTrialNow = False
         t = stroopClock.getTime()
 
+        # show stimuli
         if circleLeft.status == NOT_STARTED:
             circleLeft.setAutoDraw(True)
             circleRight.setAutoDraw(True)
             target.setAutoDraw(True)
 
-        # *response* updates
+        # response check
         if response.status == NOT_STARTED:
             response.status = STARTED
             # keyboard checking is just starting
             win.callOnFlip(response.clock.reset)  # t=0 on next screen flip
             event.clearEvents(eventType='keyboard')
-            theseKeys = event.getKeys(keyList=['left', 'right', 'space'])
+        if response.status == STARTED:
+            theseKeys = event.getKeys(keyList=['left', 'right','space'])
 
-            # check for quit:
-            if "space" in theseKeys:
-                response.rt = response.clock.getTime()
+            # check for experiment quit:
+            if "escape" in theseKeys:
+                endExpNow = True
+            # check for trial quit:
+            if 'space' in theseKeys:
+                Quit_stroop.keys = theseKeys[-1]  # just the last key pressed
+                Quit_stroop.rt = Quit_stroop.clock.getTime()
                 continueRoutine = False
-                #endTrialNow = True
-            if len(theseKeys) > 0:  # at least one key was pressed
+            # if not quit, then record response
+            elif len(theseKeys) > 0:  # at least one key was pressed
                 response.keys = theseKeys[-1]  # just the last key pressed
                 # was this 'correct'?
                 if (response.keys == str(corrStroop)) or (response.keys == corrStroop):
@@ -72,26 +84,12 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
                 else:
                     response.corr = 0
 
-
-        # *Quit_stroop* updates
-        if Quit_stroop.status == NOT_STARTED:
-            # keep track of start time/frame for later
-            Quit_stroop.tStart = t
-            Quit_stroop.status = STARTED
-            # keyboard checking is just starting
-            win.callOnFlip(Quit_stroop.clock.reset)  # t=0 on next screen flip
-            event.clearEvents(eventType='keyboard')
-        if Quit_stroop.status == STARTED:
-            theseKeys = event.getKeys(keyList=['space'])
-            # check for quit:
-            if "space" in theseKeys:
-                endTrialNow = True
-                Quit_stroop.keys = theseKeys[-1]  # just the last key pressed
-                Quit_stroop.rt = Quit_stroop.clock.getTime()
-                # a response ends the routine
-                continueRoutine = False
-
-
+        # a component has requested a forced-end of Routine
+        if not continueRoutine:
+            break
+        # ends experiment if escape has been pressed
+        if endExpNow or event.getKeys(keyList=["escape"]):
+            core.quit()
         # refresh the screen
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
