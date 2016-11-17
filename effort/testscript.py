@@ -21,6 +21,7 @@ import sys  # to get file system encoding
 import csv
 from stroop_cond import stroop_cond
 from flanker_cond import flanker_cond
+from dots_cond import dots_cond
 
 #### Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -96,9 +97,20 @@ for i in range(2):
     message = visual.TextStim(win, text='+')
     message.draw()
     win.flip()
-    core.wait(1.0)
+    core.wait(0.5)
     # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
     flanker_cond('>><>>','left',win,2)
+    message = visual.TextStim(win, text='+')
+    message.draw()
+    win.flip()
+    core.wait(0.5)
+    # Calls the flanker task function with the following order of inputs: (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
+    dots_cond(0.4,180,'left',win,2)
+    message = visual.TextStim(win, text='+')
+    message.draw()
+    win.flip()
+    core.wait(0.5)
+
     i += 1
 
 
