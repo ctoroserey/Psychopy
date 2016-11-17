@@ -1,4 +1,4 @@
-def flanker_cond(flankType, corrFlank)
+def flanker_cond(flankType, corrFlank,win,length):
 
     ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -14,15 +14,19 @@ def flanker_cond(flankType, corrFlank)
 
     # ------Prepare to start Routine "flanker"-------
     t = 0
+    endExpNow = False # putative global quit, kept there because PsychoPy acts up when removed
+    routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
+    flankerClock = core.Clock()
     flankerClock.reset()  # clock
+    flankText = visual.TextStim(win=win,name='flankText',height=0.2)
     continueRoutine = True
-    routineTimer.add(2.000000)
+    routineTimer.add(length)
     # update component parameters for each repeat
-    text.setText(flankType)
+    flankText.setText(flankType)
     flanker_resp = event.BuilderKeyResponse()
     Quit_flank = event.BuilderKeyResponse()
     # keep track of which components have finished
-    flankerComponents = [text, flanker_resp, Quit_flank]
+    flankerComponents = [flankText, flanker_resp, Quit_flank]
     for thisComponent in flankerComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
@@ -31,31 +35,21 @@ def flanker_cond(flankType, corrFlank)
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
         t = flankerClock.getTime()
-        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-        # update/draw components on each frame
 
         # *text* updates
-        if t >= 0 and text.status == NOT_STARTED:
+        if flankText.status == NOT_STARTED:
             # keep track of start time/frame for later
-            text.tStart = t
-            text.frameNStart = frameN  # exact frame index
-            text.setAutoDraw(True)
-        frameRemains = 0 + 2- win.monitorFramePeriod * 0.75  # most of one frame period left
-        if text.status == STARTED and t >= frameRemains:
-            text.setAutoDraw(False)
+            #flankText.tStart = t
+            flankText.setAutoDraw(True)
 
         # *flanker_resp* updates
-        if t >= 0 and flanker_resp.status == NOT_STARTED:
+        if flanker_resp.status == NOT_STARTED:
             # keep track of start time/frame for later
             flanker_resp.tStart = t
-            flanker_resp.frameNStart = frameN  # exact frame index
             flanker_resp.status = STARTED
             # keyboard checking is just starting
             win.callOnFlip(flanker_resp.clock.reset)  # t=0 on next screen flip
             event.clearEvents(eventType='keyboard')
-        frameRemains = 0 + 2- win.monitorFramePeriod * 0.75  # most of one frame period left
-        if flanker_resp.status == STARTED and t >= frameRemains:
-            flanker_resp.status = STOPPED
         if flanker_resp.status == STARTED:
             theseKeys = event.getKeys(keyList=['left', 'right'])
 
@@ -72,17 +66,13 @@ def flanker_cond(flankType, corrFlank)
                     flanker_resp.corr = 0
 
         # *Quit_flank* updates
-        if t >= 0.0 and Quit_flank.status == NOT_STARTED:
+        if Quit_flank.status == NOT_STARTED:
             # keep track of start time/frame for later
             Quit_flank.tStart = t
-            Quit_flank.frameNStart = frameN  # exact frame index
             Quit_flank.status = STARTED
             # keyboard checking is just starting
             win.callOnFlip(Quit_flank.clock.reset)  # t=0 on next screen flip
             event.clearEvents(eventType='keyboard')
-        frameRemains = 0.0 + 2- win.monitorFramePeriod * 0.75  # most of one frame period left
-        if Quit_flank.status == STARTED and t >= frameRemains:
-            Quit_flank.status = STOPPED
         if Quit_flank.status == STARTED:
             theseKeys = event.getKeys(keyList=['space'])
 
@@ -117,23 +107,23 @@ def flanker_cond(flankType, corrFlank)
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
     # check responses
-    if flanker_resp.keys in ['', [], None]:  # No response was made
-        flanker_resp.keys=None
-        # was no response the correct answer?!
-        if str(corrFlank).lower() == 'none':
-           flanker_resp.corr = 1  # correct non-response
-        else:
-           flanker_resp.corr = 0  # failed to respond (incorrectly)
-    # store data for thisExp (ExperimentHandler)
-    thisExp.addData('flanker_resp.keys',flanker_resp.keys)
-    thisExp.addData('flanker_resp.corr', flanker_resp.corr)
-    if flanker_resp.keys != None:  # we had a response
-        thisExp.addData('flanker_resp.rt', flanker_resp.rt)
-    thisExp.nextEntry()
-    # check responses
-    if Quit_flank.keys in ['', [], None]:  # No response was made
-        Quit_flank.keys=None
-    thisExp.addData('Quit_flank.keys',Quit_flank.keys)
-    if Quit_flank.keys != None:  # we had a response
-        thisExp.addData('Quit_flank.rt', Quit_flank.rt)
-    thisExp.nextEntry()
+    #if flanker_resp.keys in ['', [], None]:  # No response was made
+    #    flanker_resp.keys=None
+    #    # was no response the correct answer?!
+    #    if str(corrFlank).lower() == 'none':
+    #       flanker_resp.corr = 1  # correct non-response
+    #    else:
+    #       flanker_resp.corr = 0  # failed to respond (incorrectly)
+    ## store data for thisExp (ExperimentHandler)
+    #thisExp.addData('flanker_resp.keys',flanker_resp.keys)
+    #thisExp.addData('flanker_resp.corr', flanker_resp.corr)
+    #if flanker_resp.keys != None:  # we had a response
+    #    thisExp.addData('flanker_resp.rt', flanker_resp.rt)
+    #thisExp.nextEntry()
+    ## check responses
+    #if Quit_flank.keys in ['', [], None]:  # No response was made
+    #    Quit_flank.keys=None
+    #thisExp.addData('Quit_flank.keys',Quit_flank.keys)
+    #if Quit_flank.keys != None:  # we had a response
+    #    thisExp.addData('Quit_flank.rt', Quit_flank.rt)
+    #thisExp.nextEntry()
