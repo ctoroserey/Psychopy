@@ -22,6 +22,7 @@ import csv
 from stroop_cond import stroop_cond
 from flanker_cond import flanker_cond
 from dots_cond import dots_cond
+from wait_cond  import wait_cond
 
 #### Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -88,14 +89,18 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 if endExpNow:
     core.quit()
 
-trialOrder = [1,2,3,1,2,3,1,2,3,1,2,3]
+mentalOrder = [1,2,3,1,2,3,1,2,3,1,2,3]
 
 # while big task block
-shuffle(trialOrder)
-for i in trialOrder:
+shuffle(mentalOrder)
+# mental effort block
+for i in mentalOrder:
     if i == 1:
         # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
         stroop_cond('red','blue','red','green', 'left',win,1.5)
+        ## figure out how to export a value from the function that could apply here.
+        #if exit == True:
+        #    break
         message = visual.TextStim(win, text='+')
         message.draw()
         win.flip()
@@ -115,7 +120,8 @@ for i in trialOrder:
         win.flip()
         core.wait(0.5)
 
-
+# wait block
+wait_cond(win,10)
 
 # close Window
 win.close()
