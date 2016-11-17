@@ -68,7 +68,7 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
             # check for trial quit:
             if 'space' in theseKeys:
                 Quit_dots.keys = theseKeys[-1]  # just the last key pressed
-                Quit_dots.rt = Quit_flank.clock.getTime()
+                Quit_dots.rt = Quit_dots.clock.getTime()
                 continueRoutine = False
             # if not quit, then record response
         elif len(theseKeys) > 0:

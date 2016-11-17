@@ -1,12 +1,12 @@
  #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-"""
-Test version. The idea is to generate external trial functions and call them below in order to avoid clutter
 
-Consider:
-    - Removing the experiment handler
-    - Removing logs and using direct file output at the level of trial
-"""
+#Test version. The idea is to generate external trial functions and call them below in order to avoid clutter
+#
+#Consider:
+#    - Removing the experiment handler
+#    - Removing logs and using direct file output at the level of trial
+
 
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -27,8 +27,6 @@ from dots_cond import dots_cond
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
 os.chdir(_thisDir)
 
-#### important variables
-trialAmount = [10] # amount of trials per work block, add SD
 
 #### Store info about the experiment session
 expName = 'effort'  # from the Builder filename that created this script
@@ -90,29 +88,32 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 if endExpNow:
     core.quit()
 
-for i in range(2):
+trialOrder = [1,2,3,1,2,3,1,2,3,1,2,3]
 
-    # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
-    stroop_cond('red','blue','red','green', 'left',win,2)
-    message = visual.TextStim(win, text='+')
-    message.draw()
-    win.flip()
-    core.wait(0.5)
-    # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
-    flanker_cond('>><>>','left',win,2)
-    message = visual.TextStim(win, text='+')
-    message.draw()
-    win.flip()
-    core.wait(0.5)
-    # Calls the flanker task function with the following order of inputs: (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
-    dots_cond(0.4,180,'left',win,2)
-    message = visual.TextStim(win, text='+')
-    message.draw()
-    win.flip()
-    core.wait(0.5)
-
-    i += 1
-
+# while big task block
+shuffle(trialOrder)
+for i in trialOrder:
+    if i == 1:
+        # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
+        stroop_cond('red','blue','red','green', 'left',win,1.5)
+        message = visual.TextStim(win, text='+')
+        message.draw()
+        win.flip()
+        core.wait(0.5)
+    elif i == 2:
+        # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
+        flanker_cond('>><>>','left',win,1.5)
+        message = visual.TextStim(win, text='+')
+        message.draw()
+        win.flip()
+        core.wait(0.5)
+    elif i == 3:
+        # Calls the flanker task function with the following order of inputs: (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
+        dots_cond(0.4,180,'left',win,1.5)
+        message = visual.TextStim(win, text='+')
+        message.draw()
+        win.flip()
+        core.wait(0.5)
 
 
 
