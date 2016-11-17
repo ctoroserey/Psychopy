@@ -1,6 +1,7 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
     ### I don't get GitHub
+    ### Or maybe...
     ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
     from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
