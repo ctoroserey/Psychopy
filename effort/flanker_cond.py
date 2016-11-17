@@ -1,10 +1,10 @@
 def flanker_cond(flankType, corrFlank,win,length):
 
-""" To do:
-    - find out how to log the data properly, and trim further
-    - remove Quit_flank
-    - Trim further """
-    
+# To do:
+#    - find out how to log the data properly, and trim further
+#    - remove Quit_flank
+#    - Trim further 
+
     ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
     from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
