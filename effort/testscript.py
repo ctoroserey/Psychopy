@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 Test version. The idea is to generate external trial functions and call them below in order to avoid clutter
+
+Consider:
+    - Removing the experiment handler
+    - Removing logs and using direct file output at the level of trial
 """
 
 from __future__ import absolute_import, division
@@ -50,8 +54,8 @@ thisExp = data.ExperimentHandler(name=expName, version='',
 
 
 #### save a log file for detail verbose info
-logFile = logging.LogFile(filename+'.log', level=logging.EXP)
-logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
+#logFile = logging.LogFile(filename+'.log', level=logging.EXP)
+#logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
 
 endExpNow = False  # flag for 'escape' or other condition => quit the exp
 endBlockNow = False # change to true if escape has been pressed during the block
