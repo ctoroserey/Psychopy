@@ -20,41 +20,41 @@ def wait_cond(win,length):
     # Stimulus
     waitText = visual.TextStim(win=win,name='+',height=0.2)
 
-    # ------Prepare to start Routine "waiter"-------
+    # ------Prepare to start Routine "wait"-------
     t = 0
     endExpNow = False # putative global quit, kept there because PsychoPy acts up when removed
     routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
-    waiterClock = core.Clock()
-    waiterClock.reset()  # clock
+    waitClock = core.Clock()
+    waitClock.reset()  # clock
     continueRoutine = True
     routineTimer.add(length)
     # update component parameters for each repeat
-    Quit_wait = event.BuilderKeyResponse() # delete this and use 'response' instead.
+    wait_resp = event.BuilderKeyResponse() # delete this and use 'response' instead.
     # keep track of which components have finished
-    waiterComponents = [waitText, waiter_resp, Quit_wait]
-    for thisComponent in waiterComponents:
+    waitComponents = [waitText, wait_resp]
+    for thisComponent in waitComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
-    # -------Start Routine "waiter"-------
+    # -------Start Routine "wait"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
-        t = waiterClock.getTime()
+        t = waitClock.getTime()
 
         # show text
         if waitText.status == NOT_STARTED:
             waitText.setAutoDraw(True)
 
         # response check
-        if waiter_resp.status == NOT_STARTED:
+        if wait_resp.status == NOT_STARTED:
             # keep track of start time/frame for later
-            waiter_resp.tStart = t
-            waiter_resp.status = STARTED
+            wait_resp.tStart = t
+            wait_resp.status = STARTED
             # keyboard checking is just starting
-            win.callOnFlip(waiter_resp.clock.reset)  # t=0 on next screen flip
+            win.callOnFlip(wait_resp.clock.reset)  # t=0 on next screen flip
             event.clearEvents(eventType='keyboard')
-        if waiter_resp.status == STARTED:
-            theseKeys = event.getKeys(keyList=['left', 'right','space'])
+        if wait_resp.status == STARTED:
+            theseKeys = event.getKeys(keyList=['space'])
 
             # check for experiment quit:
             if "escape" in theseKeys:
@@ -64,14 +64,7 @@ def wait_cond(win,length):
                 Quit_wait.keys = theseKeys[-1]  # just the last key pressed
                 Quit_wait.rt = Quit_wait.clock.getTime()
                 continueRoutine = False
-            # if not quit, then record response
-            elif len(theseKeys) > 0:  # at least one key was pressed
-                waiter_resp.keys = theseKeys[-1]  # just the last key pressed
-                # was this 'correct'?
-                if (waiter_resp.keys == str(corrwait)) or (waiter_resp.keys == corrwait):
-                    waiter_resp.corr = 1
-                else:
-                    waiter_resp.corr = 0
+            # figure out the best way to record responses
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
@@ -83,29 +76,29 @@ def wait_cond(win,length):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
 
-    # -------Ending Routine "waiter"-------
+    # -------Ending Routine "wait"-------
     # makes sure all the stimuli stop showing
-    for thisComponent in waiterComponents:
+    for thisComponent in waitComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
 
 
 
     # check responses
-    #if waiter_resp.keys in ['', [], None]:  # No response was made
-    #    waiter_resp.keys=None
+    #if wait_resp.keys in ['', [], None]:  # No response was made
+    #    wait_resp.keys=None
     #    # was no response the correct answer?!
     #    if str(corrwait).lower() == 'none':
-    #       waiter_resp.corr = 1  # correct non-response
+    #       wait_resp.corr = 1  # correct non-response
     #    else:
-    #       waiter_resp.corr = 0  # failed to respond (incorrectly)
+    #       wait_resp.corr = 0  # failed to respond (incorrectly)
     ########
 
     ## store data for thisExp (ExperimentHandler)
-    #thisExp.addData('waiter_resp.keys',waiter_resp.keys)
-    #thisExp.addData('waiter_resp.corr', waiter_resp.corr)
-    #if waiter_resp.keys != None:  # we had a response
-    #    thisExp.addData('waiter_resp.rt', waiter_resp.rt)
+    #thisExp.addData('wait_resp.keys',wait_resp.keys)
+    #thisExp.addData('wait_resp.corr', wait_resp.corr)
+    #if wait_resp.keys != None:  # we had a response
+    #    thisExp.addData('wait_resp.rt', wait_resp.rt)
     #thisExp.nextEntry()
     ## check responses
     #if Quit_wait.keys in ['', [], None]:  # No response was made
