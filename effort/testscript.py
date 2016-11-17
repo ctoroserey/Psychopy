@@ -16,6 +16,7 @@ import os  # handy system and path functions
 import sys  # to get file system encoding
 import csv
 from stroop_cond import stroop_cond
+from flanker_cond import flanker_cond
 
 #### Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -80,10 +81,27 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 #work_trial = csv.reader(blockfile, delimiter=';')
 #blockfile.close()
 
+# Quit PsychoPy is escape was pressed
+if endExpNow:
+    core.quit()
+
 for i in range(2):
+
+    # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
     stroop_cond('red','blue','red','green', 'left',win,2)
     message = visual.TextStim(win, text='+')
     message.draw()
     win.flip()
     core.wait(1.0)
+    # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
+    flanker_cond('>><>>','left',win,2)
     i += 1
+
+
+
+
+# close Window
+win.close()
+
+# close PsychoPy
+core.quit()
