@@ -1,9 +1,9 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
-""" To do:
-    - find out how to log the data properly, and trim further
-    - remove Quit_stroop
-    - Trim further """
+# To do:
+#    - find out how to log the data properly, and trim further
+#    - remove Quit_stroop
+#    - Trim further
 
     ### I don't get GitHub
     ### Or maybe...
