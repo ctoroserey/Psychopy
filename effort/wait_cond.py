@@ -18,7 +18,7 @@ def wait_cond(win,length):
     import csv
 
     # Stimulus
-    waitText = visual.TextStim(win=win,name='+',height=0.2)
+    waitText = visual.TextStim(win=win,name='+',text='Wait',height=0.2)
 
     # ------Prepare to start Routine "wait"-------
     t = 0
@@ -28,6 +28,7 @@ def wait_cond(win,length):
     waitClock.reset()  # clock
     continueRoutine = True
     routineTimer.add(length)
+    Quit_wait = event.BuilderKeyResponse() # consider deleting this and using 'response' instead
     # update component parameters for each repeat
     wait_resp = event.BuilderKeyResponse() # delete this and use 'response' instead.
     # keep track of which components have finished

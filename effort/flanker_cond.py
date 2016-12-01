@@ -3,7 +3,7 @@ def flanker_cond(flankType, corrFlank,win,length):
 # To do:
 #    - find out how to log the data properly, and trim further
 #    - remove Quit_flank
-#    - Trim further 
+#    - Trim further
 
     ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -27,6 +27,7 @@ def flanker_cond(flankType, corrFlank,win,length):
     flankerClock = core.Clock()
     flankerClock.reset()  # clock
     continueRoutine = True
+    response = None
     routineTimer.add(length)
     # update component parameters for each repeat
     flankText.setText(flankType)
@@ -38,6 +39,7 @@ def flanker_cond(flankType, corrFlank,win,length):
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
+    response = 0
     # -------Start Routine "flanker"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
@@ -66,17 +68,27 @@ def flanker_cond(flankType, corrFlank,win,length):
                 Quit_flank.keys = theseKeys[-1]  # just the last key pressed
                 Quit_flank.rt = Quit_flank.clock.getTime()
                 continueRoutine = False
-            # if not quit, then record response
+
             elif len(theseKeys) > 0:  # at least one key was pressed
                 flanker_resp.keys = theseKeys[-1]  # just the last key pressed
                 # was this 'correct'?
                 if (flanker_resp.keys == str(corrFlank)) or (flanker_resp.keys == corrFlank):
                     flanker_resp.corr = 1
-                else:
+                    response = 2
+                elif (flanker_resp.keys is not str(corrFlank)) or (flanker_resp.keys is not corrFlank):
                     flanker_resp.corr = 0
+                    response = 3
+            else: # no response
+                response = 4
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
+            response = 1            # if not quit, then record response
+            for thisComponent in flankerComponents:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)
+            return response
+
             break
         # check for quit (the Esc key)
         if endExpNow or event.getKeys(keyList=["escape"]):
@@ -85,11 +97,14 @@ def flanker_cond(flankType, corrFlank,win,length):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
 
+
     # -------Ending Routine "flanker"-------
     # makes sure all the stimuli stop showing
     for thisComponent in flankerComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
+
+    return response        
 
 
 

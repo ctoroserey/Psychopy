@@ -25,6 +25,9 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     circleLeft = visual.Polygon(win=win,units='cm',edges=1000,size=(2, 2),pos=(-4, -4))
     circleRight = visual.Polygon(win=win,units='cm',edges=1000, size=(2, 2),pos=(4, -4))
 
+    # this global variable quits the mental effort block if = 1
+    global quit_block
+
     # ------Prepare to start Routine "stroop"-------
 
     t = 0
@@ -37,16 +40,17 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     # update component parameters for each repeat
     target.setColor(color, colorSpace='rgb')
     target.setText(word)
-    response = event.BuilderKeyResponse()
+    stroop_resp = event.BuilderKeyResponse()
     circleLeft.setFillColor(rgbOne)
     circleRight.setFillColor(rgbTwo)
     Quit_stroop = event.BuilderKeyResponse() # delete this and use 'response' instead.
     # keep track of which components have finished
-    stroopComponents = [target, response, circleLeft, circleRight, Quit_stroop]
+    stroopComponents = [target, stroop_resp, circleLeft, circleRight, Quit_stroop]
     for thisComponent in stroopComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
+    response = 0
     # -------Start Routine "stroop"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
@@ -59,12 +63,12 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
             target.setAutoDraw(True)
 
         # response check
-        if response.status == NOT_STARTED:
-            response.status = STARTED
+        if stroop_resp.status == NOT_STARTED:
+            stroop_resp.status = STARTED
             # keyboard checking is just starting
-            win.callOnFlip(response.clock.reset)  # t=0 on next screen flip
+            win.callOnFlip(stroop_resp.clock.reset)  # t=0 on next screen flip
             event.clearEvents(eventType='keyboard')
-        if response.status == STARTED:
+        if stroop_resp.status == STARTED:
             theseKeys = event.getKeys(keyList=['left', 'right','space'])
 
             # check for experiment quit:
@@ -75,17 +79,27 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
                 Quit_stroop.keys = theseKeys[-1]  # just the last key pressed
                 Quit_stroop.rt = Quit_stroop.clock.getTime()
                 continueRoutine = False
+
             # if not quit, then record response
             elif len(theseKeys) > 0:  # at least one key was pressed
-                response.keys = theseKeys[-1]  # just the last key pressed
+                stroop_resp.keys = theseKeys[-1]  # just the last key pressed
                 # was this 'correct'?
-                if (response.keys == str(corrStroop)) or (response.keys == corrStroop):
-                    response.corr = 1 # Find out how to export this value. Maybe into an excel spreadsheet?
-                else:
-                    response.corr = 0
+                if (stroop_resp.keys == str(corrStroop)) or (stroop_resp.keys == corrStroop):
+                    stroop_resp.corr = 1
+                    response = 2
+                elif (stroop_resp.keys is not str(corrStroop)) or (stroop_resp.keys is not corrStroop):
+                    stroop_resp.corr = 0
+                    response = 3
+            else: # no response
+                response = 4
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
+            response = 1            # if not quit, then record response
+            for thisComponent in stroopComponents:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)
+            return response
             break
         # ends experiment if escape has been pressed
         if endExpNow or event.getKeys(keyList=["escape"]):
@@ -94,12 +108,13 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
 
+
     # -------Ending Routine "stroop"-------
     # makes sure all the stimuli stop showing
     for thisComponent in stroopComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-
+    return response
 
 
     # check responses

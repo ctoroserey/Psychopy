@@ -24,6 +24,7 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
         fieldShape='circle',signalDots='same', noiseDots='direction',
         dotLife=1000)
 
+
     # ------Prepare to start Routine "dots"-------
     t = 0
     endExpNow = False # putative global quit, kept there because PsychoPy acts up when removed
@@ -43,6 +44,8 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
+
+    response = 0
     # -------Start Routine "dots"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
@@ -77,11 +80,20 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
             if (dots_resp.keys == str(corrDots)) or (dots_resp.keys == corrDots):
             #(dots_resp.keys == str('corrDots')) or (dots_resp.keys == 'corrDots'):
                 dots_resp.corr = 1
-            else:
+                response = 2
+            elif  (dots_resp.keys is not str(corrDots)) or (dots_resp.keys is not corrDots):
                 dots_resp.corr = 0
+                response = 3
+        else: # no response
+            response = 4
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
+            response = 1            # if not quit, then record response
+            for thisComponent in dotsComponents:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)
+            return response
             break
         # check for quit (the Esc key)
         if endExpNow or event.getKeys(keyList=["escape"]):
@@ -90,11 +102,12 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
         if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
             win.flip()
 
+
     # -------Ending Routine "dots"-------
     for thisComponent in dotsComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-
+    return response
 
     # check responses
     #if Quit.keys in ['', [], None]:  # No response was made
