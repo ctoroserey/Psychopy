@@ -4,6 +4,7 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 #    - find out how to log the data properly, and trim further
 #    - remove Quit_stroop
 #    - Trim further
+#       - The response within the 'if len(theseKeys)' can be modified to just "if corrStroop in theseKeys:" But the whole response system needs to be modified.
 
     ### I don't get GitHub
     ### Or maybe...

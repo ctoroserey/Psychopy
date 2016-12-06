@@ -6,6 +6,8 @@
 #Consider:
 #    - Removing the experiment handler
 #    - Removing logs and using direct file output at the level of trial
+#    - Fix the logging. Response within functions might have to be completely changed so only one key press is logged.
+#    - 
 
 
 from __future__ import absolute_import, division
@@ -98,10 +100,15 @@ shuffle(mentalOrder)
 # Overall condition loop
 for k in cond_order:
     if k == 1:
+        miss = 0
         # mental effort block
+        message = visual.TextStim(win, text='Work')
+        message.draw()
+        win.flip()
+        core.wait(2)
         for i in mentalOrder:
             mental_response = None
-            miss = 0
+
             if i == 1:
                 # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 mental_response = stroop_cond('red','blue','red','green', 'left',win,1.5) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
@@ -138,20 +145,26 @@ for k in cond_order:
                 resp_log.append(0)
                 miss += 1
 
+            print miss
             if miss > 3:
                 break
 
     elif k == 2:
         # wait block
+        message = visual.TextStim(win, text='Wait')
+        message.draw()
+        win.flip()
+        core.wait(2)
+
         wait_response = wait_cond(win,10)
         message = visual.TextStim(win, text='+')
         message.draw()
         win.flip()
-        core.wait(0.5)        
+        core.wait(0.5)
         ## wait block response processing
         #if wait_response == 1
 
-    print resp_log
+    #print resp_log
 # close Window
 win.close()
 

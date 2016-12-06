@@ -18,7 +18,7 @@ def wait_cond(win,length):
     import csv
 
     # Stimulus
-    waitText = visual.TextStim(win=win,name='+',text='Wait',height=0.2)
+    waitText = visual.TextStim(win=win,name='+',text='+',height=0.2)
 
     # ------Prepare to start Routine "wait"-------
     t = 0
