@@ -70,22 +70,24 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
                 endExpNow = True
             # check for trial quit:
             if 'space' in theseKeys:
-                Quit_dots.keys = theseKeys[-1]  # just the last key pressed
-                Quit_dots.rt = Quit_dots.clock.getTime()
+                #Quit_dots.keys = theseKeys[-1]  # just the last key pressed
+                #Quit_dots.rt = Quit_dots.clock.getTime()
                 continueRoutine = False
             # if not quit, then record response
-        elif len(theseKeys) > 0:
-            dots_resp.keys = theseKeys[-1] # just the last key pressed
-            # was this correct?
-            if (dots_resp.keys == str(corrDots)) or (dots_resp.keys == corrDots):
-            #(dots_resp.keys == str('corrDots')) or (dots_resp.keys == 'corrDots'):
-                dots_resp.corr = 1
-                response = 2
-            elif  (dots_resp.keys is not str(corrDots)) or (dots_resp.keys is not corrDots):
-                dots_resp.corr = 0
+            elif len(theseKeys) > 0:
+                print 'but i pressed!'
+                dots_resp.keys = theseKeys[-1] # just the last key pressed
+                # was this correct?
+                if (dots_resp.keys == str(corrDots)) or (dots_resp.keys == corrDots):
+                    #(dots_resp.keys == str('corrDots')) or (dots_resp.keys == 'corrDots'):
+                    print 'correct!'
+                    dots_resp.corr = 1
+                    response = 2
+                    #elif  (dots_resp.keys is not str(corrDots)) or (dots_resp.keys is not corrDots):
+                    #    dots_resp.corr = 0
+                    #    response = 3
+            else: # no response
                 response = 3
-        else: # no response
-            response = 4
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:

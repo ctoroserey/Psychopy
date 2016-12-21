@@ -99,13 +99,14 @@ shuffle(mentalOrder)
 for k in cond_order:
     if k == 1:
         # mental effort block
+        miss = 0
         for i in mentalOrder:
             mental_response = None
-            miss = 0
+            #miss = 0
             if i == 1:
                 # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 mental_response = stroop_cond('red','blue','red','green', 'left',win,1.5) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
-                ## figure out how to export a value from the function that could apply here.
+                print mental_response ## figure out how to export a value from the function that could apply here.
                 message = visual.TextStim(win, text='+')
                 message.draw()
                 win.flip()
@@ -113,6 +114,7 @@ for k in cond_order:
             elif i == 2:
                 # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
                 mental_response = flanker_cond('>><>>','left',win,1.5)
+                print mental_response
                 message = visual.TextStim(win, text='+')
                 message.draw()
                 win.flip()
@@ -120,6 +122,7 @@ for k in cond_order:
             elif i == 3:
                 # Calls the flanker task function with the following order of inputs: (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
                 mental_response = dots_cond(0.4,180,'left',win,1.5)
+                print mental_response
                 message = visual.TextStim(win, text='+')
                 message.draw()
                 win.flip()
@@ -134,11 +137,10 @@ for k in cond_order:
                 resp_log.append(2)
             elif mental_response == 3:
                 resp_log.append(3)
-            elif mental_response == 4:
-                resp_log.append(0)
                 miss += 1
 
-            if miss > 3:
+            if miss > 2:
+                print miss
                 break
 
     elif k == 2:
@@ -147,11 +149,10 @@ for k in cond_order:
         message = visual.TextStim(win, text='+')
         message.draw()
         win.flip()
-        core.wait(0.5)        
+        core.wait(0.5)
         ## wait block response processing
         #if wait_response == 1
 
-    print resp_log
 # close Window
 win.close()
 

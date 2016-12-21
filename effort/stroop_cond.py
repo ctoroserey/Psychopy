@@ -76,8 +76,8 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
                 endExpNow = True
             # check for trial quit:
             if 'space' in theseKeys:
-                Quit_stroop.keys = theseKeys[-1]  # just the last key pressed
-                Quit_stroop.rt = Quit_stroop.clock.getTime()
+                #Quit_stroop.keys = theseKeys[-1]  # just the last key pressed
+                #Quit_stroop.rt = Quit_stroop.clock.getTime()
                 continueRoutine = False
 
             # if not quit, then record response
@@ -85,13 +85,14 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
                 stroop_resp.keys = theseKeys[-1]  # just the last key pressed
                 # was this 'correct'?
                 if (stroop_resp.keys == str(corrStroop)) or (stroop_resp.keys == corrStroop):
+                    print 'correct!'
                     stroop_resp.corr = 1
                     response = 2
-                elif (stroop_resp.keys is not str(corrStroop)) or (stroop_resp.keys is not corrStroop):
-                    stroop_resp.corr = 0
-                    response = 3
+                #elif (stroop_resp.keys is not str(corrStroop)) or (stroop_resp.keys is not corrStroop):
+                #    stroop_resp.corr = 0
+                #    response = 3
             else: # no response
-                response = 4
+                response = 3
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:

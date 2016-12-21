@@ -65,21 +65,22 @@ def flanker_cond(flankType, corrFlank,win,length):
                 endExpNow = True
             # check for trial quit:
             if 'space' in theseKeys:
-                Quit_flank.keys = theseKeys[-1]  # just the last key pressed
-                Quit_flank.rt = Quit_flank.clock.getTime()
+                #Quit_flank.keys = theseKeys[-1]  # just the last key pressed
+                #Quit_flank.rt = Quit_flank.clock.getTime()
                 continueRoutine = False
 
             elif len(theseKeys) > 0:  # at least one key was pressed
                 flanker_resp.keys = theseKeys[-1]  # just the last key pressed
                 # was this 'correct'?
                 if (flanker_resp.keys == str(corrFlank)) or (flanker_resp.keys == corrFlank):
+                    print 'correct!'
                     flanker_resp.corr = 1
                     response = 2
-                elif (flanker_resp.keys is not str(corrFlank)) or (flanker_resp.keys is not corrFlank):
-                    flanker_resp.corr = 0
-                    response = 3
+                #elif (flanker_resp.keys is not str(corrFlank)) or (flanker_resp.keys is not corrFlank):
+                #    flanker_resp.corr = 0
+                #    response = 3
             else: # no response
-                response = 4
+                response = 3
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
@@ -104,7 +105,7 @@ def flanker_cond(flankType, corrFlank,win,length):
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
 
-    return response        
+    return response
 
 
 
