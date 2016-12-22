@@ -1,11 +1,5 @@
 def wait_cond(win,length):
 
-# To do:
-#    - find out how to log the data properly, and trim further
-#    - Modify so it just waits
-
-
-    ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
     from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
                                     STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
@@ -17,7 +11,7 @@ def wait_cond(win,length):
     import sys  # to get file system encoding
     import csv
 
-    # Stimulus
+    # Stimulus Setup
     waitText = visual.TextStim(win=win,name='+',text='Wait',height=0.2)
 
     # ------Prepare to start Routine "wait"-------
@@ -82,29 +76,3 @@ def wait_cond(win,length):
     for thisComponent in waitComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
-
-
-
-    # check responses
-    #if wait_resp.keys in ['', [], None]:  # No response was made
-    #    wait_resp.keys=None
-    #    # was no response the correct answer?!
-    #    if str(corrwait).lower() == 'none':
-    #       wait_resp.corr = 1  # correct non-response
-    #    else:
-    #       wait_resp.corr = 0  # failed to respond (incorrectly)
-    ########
-
-    ## store data for thisExp (ExperimentHandler)
-    #thisExp.addData('wait_resp.keys',wait_resp.keys)
-    #thisExp.addData('wait_resp.corr', wait_resp.corr)
-    #if wait_resp.keys != None:  # we had a response
-    #    thisExp.addData('wait_resp.rt', wait_resp.rt)
-    #thisExp.nextEntry()
-    ## check responses
-    #if Quit_wait.keys in ['', [], None]:  # No response was made
-    #    Quit_wait.keys=None
-    #thisExp.addData('Quit_wait.keys',Quit_wait.keys)
-    #if Quit_wait.keys != None:  # we had a response
-    #    thisExp.addData('Quit_wait.rt', Quit_wait.rt)
-    #thisExp.nextEntry()
