@@ -83,8 +83,6 @@ routineTimer = core.CountdownTimer()  # to track time remaining of each (non-sli
 ##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
 reward = visual.TextStim(win,height=0.1,text='$0.25')
-## Cummulative reward amount
-reward_amount = 0
 ## Traveling stimulus
 traveling = visual.TextStim(win, text='Traveling',height=0.1)
 ## ISI stimulus
@@ -92,7 +90,8 @@ isi = visual.TextStim(win, text='+')
 ## ITI stimulus
 #iti = visual.Rect(win=win,width=0.5,height=0.5,fillColor='green',fillColorSpace='rgb') # not sure why a rectangle is needed
 iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1)
-
+## Cummulative reward amount
+reward_amount = 0
 ## Log header
 resp_log = "Condition       RT      Total Time\n"
 
@@ -155,7 +154,7 @@ for k in cond_order:
 
             if miss > 2 or mental_response == 1:
                 needs_reward = False
-                resp_log += 'Traveling' # + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+                resp_log += 'Traveling' + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
                 #travel.setText('Traveling'+' '+str(set_iti)+' '+'seconds') # think about it, but a bar might be better
                 traveling.draw()
                 win.flip()
@@ -181,7 +180,7 @@ for k in cond_order:
         ## wait block response processing
         if wait_response == 1:
             resp_log += 'Quit_wait' + '\n'
-            resp_log += 'Traveling' # + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+            resp_log += 'Traveling' + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
             traveling.draw()
             win.flip()
             core.wait(set_iti) #ITI
