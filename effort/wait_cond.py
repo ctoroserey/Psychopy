@@ -12,7 +12,7 @@ def wait_cond(win,length):
     import csv
 
     # Stimulus Setup
-    waitText = visual.TextStim(win=win,name='+',text='+',height=0.2)
+    waitText = visual.TextStim(win=win,name='+',text='+',height=0.1)
 
     # ------Prepare to start Routine "wait"-------
     t = 0
@@ -67,7 +67,7 @@ def wait_cond(win,length):
             response = 1
             for thisComponent in waitComponents:
                 if hasattr(thisComponent, "setAutoDraw"):
-                    thisComponent.setAutoDraw(False)               
+                    thisComponent.setAutoDraw(False)
             return response
             break
         # check for quit (the Esc key)

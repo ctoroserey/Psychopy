@@ -29,7 +29,7 @@ def flanker_cond(flankType, corrFlank,win,length):
     while response == 0:
             theseKeys = event.getKeys(keyList=['left', 'right','space','escape'])
             if len(theseKeys) == 0:
-                print 'miss'
+                #print 'miss'
                 response = 3
             elif len(theseKeys) > 0:
                 if 'escape' in theseKeys:
@@ -37,10 +37,10 @@ def flanker_cond(flankType, corrFlank,win,length):
                 elif 'space' in theseKeys:
                     response = 1
                 elif (theseKeys[-1] == str(corrFlank)) or (theseKeys[-1] == corrFlank):
-                    print 'correct!'
+                    #print 'correct!'
                     response = 2
                 else:
-                    print 'incorrect'
+                    #print 'incorrect'
                     response = 3
 
     return response

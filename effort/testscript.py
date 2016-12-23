@@ -23,6 +23,7 @@ from stroop_cond import stroop_cond
 from flanker_cond import flanker_cond
 from dots_cond import dots_cond
 from wait_cond  import wait_cond
+from random import randint
 
 #### Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -79,29 +80,43 @@ else:
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
 
-## Reward stimulus
-reward = visual.TextStim(win,height=0.2,text='25 cents')
-## Traveling stimulus
-traveling = visual.TextStim(win, text='Traveling',height=0.2)
 
-resp_log = [] # mental_response log: 1=quit; 2=correct; 3=incorrect; 4=quit_wait; 0=miss
+## Reward stimulus
+reward = visual.TextStim(win,height=0.1,text='$0.25')
+## Cummulative reward amount
+reward_amount = 0
+## Traveling stimulus
+traveling = visual.TextStim(win, text='Traveling',height=0.1)
+## ISI stimulus
+isi = visual.TextStim(win, text='+')
+## ITI stimulus
+#iti = visual.Rect(win=win,width=0.5,height=0.5,fillColor='green',fillColorSpace='rgb') # not sure why a rectangle is needed
+iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1)
+
+resp_log = "Condition   Time\n"
 
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
 mentalOrder = [1,2,3,1,2,3,1,2,3]
-#mentalOrder = [3,3,3,3,3,3]
-
 
 # Overall condition loop
 for k in cond_order:
-    if k == 1:
-        # mental effort block
-        message = visual.TextStim(win, text='Mental work', height=0.2)
+    # ITI cue
+    set_iti = randint(1,10) # find out the best way to choose with a define probability
+    iti.setText('Travel time ='+' '+str(set_iti))
+    resp_log += 'Travel time ='+' '+str(set_iti) + '\n'
+    iti.draw()
+    win.flip()
+    core.wait(2)
+    # Condition selection
+    if k == 1: # Cogtnitive effort block
+        message = visual.TextStim(win, text='Mental work', height=0.1)
         message.draw()
         win.flip()
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
         miss = 0
+        needs_reward = True # changes to False if the participant quits the block
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
@@ -109,56 +124,53 @@ for k in cond_order:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 mental_response = stroop_cond('red','blue','red','green', 'left',win,1.5) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
-                print mental_response
-                message = visual.TextStim(win, text='+')
-                message.draw()
+                isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 2:
                 # Calls the flanker task function with the following order of inputs:
                 # (flanker type, correct answer left-right, win (window),time of task)
                 mental_response = flanker_cond('>><>>','left',win,1.5)
-                print mental_response
-                message = visual.TextStim(win, text='+')
-                message.draw()
+                isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 3:
                 # Calls the flanker task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
                 mental_response = dots_cond(0.4,180,'left',win,1.5)
-                print mental_response
-                message = visual.TextStim(win, text='+')
-                message.draw()
+                isi.draw()
                 win.flip()
                 core.wait(0.5)
 
             ## mental_response processing
             # if space was pressed, break the loop and log it as a 1 (quit), otherwise log correct/incorrect responses onto resp_log as coded above
             if mental_response == 1:
-                resp_log.append('Quit_cog')
-                #break
+                resp_log += 'Quit_cog' + '\n'
             elif mental_response == 2:
-                resp_log.append('Correct_cog')
+                resp_log += 'Correct_cog' + '\n'
             elif mental_response == 3:
-                resp_log.append('Incorr_miss_cog')
+                resp_log += 'Incorr_miss_cog' + '\n'
                 miss += 1
-                print miss
 
             if miss > 2 or mental_response == 1:
-                resp_log.append('Traveling') # in the future, do 'Traveling'+ str(ITI)
+                needs_reward = False
+                resp_log += 'Traveling' # + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+                #travel.setText('Traveling'+' '+str(set_iti)+' '+'seconds') # think about it, but a bar might be better
                 traveling.draw()
                 win.flip()
-                core.wait(4) # ITI
+                core.wait(set_iti) # ITI
                 break
 
-        reward.draw()
-        win.flip()
-        core.wait(2)
+        # Give reward once block is completed
+        if needs_reward:
+            resp_log += 'Cognitive_completed' + '\n'
+            reward_amount += 0.25
+            reward.draw()
+            win.flip()
+            core.wait(2)
 
-    elif k == 2:
-        # wait block
-        message = visual.TextStim(win, text='Wait', height=0.2)
+    elif k == 2: # Wait block
+        message = visual.TextStim(win, text='Wait', height=0.1)
         message.draw()
         win.flip()
         core.wait(2)
@@ -167,17 +179,20 @@ for k in cond_order:
         wait_response = wait_cond(win,10)
         ## wait block response processing
         if wait_response == 1:
-            resp_log.append('Quit_wait')
-            resp_log.append('Traveling') # in the future, do 'Traveling'+ str(ITI)
+            resp_log += 'Quit_wait' + '\n'
+            resp_log += 'Traveling' # + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
             traveling.draw()
             win.flip()
-            core.wait(4) #ITI
+            core.wait(set_iti) #ITI
         else:
+            # Give reward once block is completed
+            resp_log += 'Wait_completed' + '\n'
+            reward_amount += 0.25
             reward.draw()
             win.flip()
             core.wait(2)
 
-
+    print resp_log
 # close Window
 win.close()
 

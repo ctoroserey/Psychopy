@@ -32,7 +32,7 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
     while response == 0:
         theseKeys = event.getKeys(keyList=['left', 'right','space','escape'])
         if len(theseKeys) == 0:
-            print 'miss'
+            #print 'miss'
             response = 3
         elif len(theseKeys) > 0:
             if 'escape' in theseKeys:
@@ -40,10 +40,10 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
             elif 'space' in theseKeys:
                 response = 1
             elif (theseKeys[-1] == str(corrDots)) or (theseKeys[-1] == corrDots):
-                print 'correct!'
+                #print 'correct!'
                 response = 2
             else:
-                print 'incorrect'
+                #print 'incorrect'
                 response = 3
 
     return response

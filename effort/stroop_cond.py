@@ -34,7 +34,7 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     while response == 0:
         theseKeys = event.getKeys(keyList=['left', 'right','space','escape'])
         if len(theseKeys) == 0:
-            print 'miss'
+            #print 'miss'
             response = 3
         elif len(theseKeys) > 0:
             if 'escape' in theseKeys:
@@ -42,10 +42,10 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
             elif 'space' in theseKeys:
                 response = 1
             elif (theseKeys[-1] == str(corrStroop)) or (theseKeys[-1] == corrStroop):
-                print 'correct!'
+                #print 'correct!'
                 response = 2
             else:
-                print 'incorrect'
+                #print 'incorrect'
                 response = 3
 
     return (response)
