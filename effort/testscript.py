@@ -79,15 +79,15 @@ else:
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
 
-
-# Quit PsychoPy is escape was pressed
-if endExpNow:
-    core.quit()
+## Reward stimulus
+reward = visual.TextStim(win,height=0.2,text='25 cents')
+## Traveling stimulus
+traveling = visual.TextStim(win, text='Traveling',height=0.2)
 
 resp_log = [] # mental_response log: 1=quit; 2=correct; 3=incorrect; 4=quit_wait; 0=miss
 
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
-mentalOrder = [1,2,3,1,2,3,1,2,3,1,2,3]
+mentalOrder = [1,2,3,1,2,3,1,2,3]
 #mentalOrder = [3,3,3,3,3,3]
 
 
@@ -95,12 +95,19 @@ mentalOrder = [1,2,3,1,2,3,1,2,3,1,2,3]
 for k in cond_order:
     if k == 1:
         # mental effort block
+        message = visual.TextStim(win, text='Mental work', height=0.2)
+        message.draw()
+        win.flip()
+        core.wait(2)
+        if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
+            core.quit()
         miss = 0
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
             if i == 1:
-                # Calls the stroop task function with the following order of inputs: (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
+                # Calls the stroop task function with the following order of inputs:
+                # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 mental_response = stroop_cond('red','blue','red','green', 'left',win,1.5) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
                 print mental_response
                 message = visual.TextStim(win, text='+')
@@ -108,7 +115,8 @@ for k in cond_order:
                 win.flip()
                 core.wait(0.5)
             elif i == 2:
-                # Calls the flanker task function with the following order of inputs: (flanker type, correct answer left-right, win (window),time of task)
+                # Calls the flanker task function with the following order of inputs:
+                # (flanker type, correct answer left-right, win (window),time of task)
                 mental_response = flanker_cond('>><>>','left',win,1.5)
                 print mental_response
                 message = visual.TextStim(win, text='+')
@@ -116,7 +124,8 @@ for k in cond_order:
                 win.flip()
                 core.wait(0.5)
             elif i == 3:
-                # Calls the flanker task function with the following order of inputs: (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
+                # Calls the flanker task function with the following order of inputs:
+                # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
                 mental_response = dots_cond(0.4,180,'left',win,1.5)
                 print mental_response
                 message = visual.TextStim(win, text='+')
@@ -127,27 +136,47 @@ for k in cond_order:
             ## mental_response processing
             # if space was pressed, break the loop and log it as a 1 (quit), otherwise log correct/incorrect responses onto resp_log as coded above
             if mental_response == 1:
-                resp_log.append(1)
-                break
+                resp_log.append('Quit_cog')
+                #break
             elif mental_response == 2:
-                resp_log.append(2)
+                resp_log.append('Correct_cog')
             elif mental_response == 3:
-                resp_log.append(3)
+                resp_log.append('Incorr_miss_cog')
                 miss += 1
                 print miss
 
-            if miss > 2:
+            if miss > 2 or mental_response == 1:
+                resp_log.append('Traveling') # in the future, do 'Traveling'+ str(ITI)
+                traveling.draw()
+                win.flip()
+                core.wait(4) # ITI
                 break
+
+        reward.draw()
+        win.flip()
+        core.wait(2)
 
     elif k == 2:
         # wait block
-        wait_response = wait_cond(win,10)
-        message = visual.TextStim(win, text='+')
+        message = visual.TextStim(win, text='Wait', height=0.2)
         message.draw()
         win.flip()
-        core.wait(0.5)
+        core.wait(2)
+        if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
+            core.quit()
+        wait_response = wait_cond(win,10)
         ## wait block response processing
-        #if wait_response == 1
+        if wait_response == 1:
+            resp_log.append('Quit_wait')
+            resp_log.append('Traveling') # in the future, do 'Traveling'+ str(ITI)
+            traveling.draw()
+            win.flip()
+            core.wait(4) #ITI
+        else:
+            reward.draw()
+            win.flip()
+            core.wait(2)
+
 
 # close Window
 win.close()

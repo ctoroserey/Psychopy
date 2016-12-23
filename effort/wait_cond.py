@@ -12,7 +12,7 @@ def wait_cond(win,length):
     import csv
 
     # Stimulus Setup
-    waitText = visual.TextStim(win=win,name='+',text='Wait',height=0.2)
+    waitText = visual.TextStim(win=win,name='+',text='+',height=0.2)
 
     # ------Prepare to start Routine "wait"-------
     t = 0
@@ -31,6 +31,7 @@ def wait_cond(win,length):
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
+    response = 0
     # -------Start Routine "wait"-------
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
@@ -63,6 +64,11 @@ def wait_cond(win,length):
 
         # a component has requested a forced-end of Routine
         if not continueRoutine:
+            response = 1
+            for thisComponent in waitComponents:
+                if hasattr(thisComponent, "setAutoDraw"):
+                    thisComponent.setAutoDraw(False)               
+            return response
             break
         # check for quit (the Esc key)
         if endExpNow or event.getKeys(keyList=["escape"]):
