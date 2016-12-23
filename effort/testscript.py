@@ -80,7 +80,7 @@ else:
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
 
-
+##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
 reward = visual.TextStim(win,height=0.1,text='$0.25')
 ## Cummulative reward amount
@@ -93,16 +93,17 @@ isi = visual.TextStim(win, text='+')
 #iti = visual.Rect(win=win,width=0.5,height=0.5,fillColor='green',fillColorSpace='rgb') # not sure why a rectangle is needed
 iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1)
 
-resp_log = "Condition   Time\n"
+## Log header
+resp_log = "Condition       RT      Total Time\n"
 
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
 mentalOrder = [1,2,3,1,2,3,1,2,3]
 
-# Overall condition loop
+##----------------------- Overall condition loop ---------------------------
 for k in cond_order:
     # ITI cue
-    set_iti = randint(1,10) # find out the best way to choose with a define probability
-    iti.setText('Travel time ='+' '+str(set_iti))
+    set_iti = randint(1,10) # find out the best way to choose ITI with a defined probability
+    iti.setText('Travel time ='+' '+str(set_iti)+' '+'seconds')
     resp_log += 'Travel time ='+' '+str(set_iti) + '\n'
     iti.draw()
     win.flip()
