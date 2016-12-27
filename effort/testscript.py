@@ -80,8 +80,8 @@ reward_amount = 0
 ## task lengths
 length = 1.5 # for each mental task
 wait_length = 10 # for the waiting block
-## Log header
-resp_log = "Condition       RT      Total Time\n"
+## Log header, output as csv
+resp_log = 'Condition'+','+'RT'+','+'Total Time'+'\n'
 
 ### Importing task parameters
 ## Stroop
@@ -102,7 +102,7 @@ corrDots = []
 # The order of the columns in the .csv file should be:
 # stroopWord,stroopColor,leftColor,rightColor,corrStroop,flankType,corrFlank,coherDots,direcDots,corrDots
 
-condfile = open('conditions.csv','rb')
+condfile = open('conditions.csv','rU') # traditionally, rb should work. However, Mac inputs \r as line delimiter, so rU changes that to \n instead. See 'open' for info
 reader = csv.reader(condfile,delimiter=',')
 for row in reader:
     stroopWord.append(row[0])
@@ -117,11 +117,11 @@ for row in reader:
     corrDots.append(row[9])
 condfile.close()
 
-print coherDots
-print direcDots
+print flankType
 
 ### Order of the conditions and the mental tasks
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
+shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3]
 
 ##----------------------- Overall condition loop ---------------------------
