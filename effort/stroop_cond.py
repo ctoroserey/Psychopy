@@ -48,7 +48,6 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
             else:
                 #print 'incorrect'
                 response = 3
-    print theseKeys
 
 ## IMPORTANT: to return timestamps along with the answer, use a tuple like: 'return (response, RT)'
     return (response)

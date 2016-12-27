@@ -43,8 +43,6 @@ filename = _thisDir + os.sep + u'data/%s_%s' % (expInfo['participant'], expName)
 #logFile = logging.LogFile(filename+'.log', level=logging.EXP)
 #logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
 
-endExpNow = False  # flag for 'escape' or other condition => quit the exp
-endBlockNow = False # change to true if escape has been pressed during the block
 
 ### Setup the Window
 win = visual.Window(
@@ -63,7 +61,6 @@ else:
 
 #### Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
-routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine
 
 ##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
@@ -127,7 +124,7 @@ for k in cond_order:
     # ITI cue
     set_iti = randint(1,10) # find out the best way to choose ITI with a defined probability
     iti.setText('Travel time ='+' '+str(set_iti)+' '+'seconds')
-    resp_log += 'Travel time ='+' '+str(set_iti) + '\n'
+    resp_log += 'Travel time ='+' '+str(set_iti) + ',' + str(globalClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
     iti.draw()
     win.flip()
     core.wait(2)
@@ -139,6 +136,7 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
+        blockClock = core.Clock()
         miss = 0 # keeps track of incorrect answers or misses
         needs_reward = True # changes to False if the participant quits the block
         shuffle(mentalOrder)
@@ -171,17 +169,17 @@ for k in cond_order:
             ## mental_response processing
             # if space was pressed, break the loop and log it as a 1 (quit), otherwise log correct/incorrect responses onto resp_log as coded above
             if mental_response == 1:
-                resp_log += 'Quit_cog' + '\n'
+                resp_log += 'Quit_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
             elif mental_response == 2:
-                resp_log += 'Correct_cog' + '\n'
+                resp_log += 'Correct_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
             elif mental_response == 3:
-                resp_log += 'Incorr_miss_cog' + '\n'
+                resp_log += 'Incorr_miss_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
                 miss += 1
 
 
             if miss > 2 or mental_response == 1:
                 needs_reward = False
-                resp_log += 'Traveling' + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+                resp_log += 'Traveling' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
                 #travel.setText('Traveling'+' '+str(set_iti)+' '+'seconds') # think about it, but a bar might be better
                 traveling.draw()
                 win.flip()
@@ -190,7 +188,7 @@ for k in cond_order:
 
         # Give reward once block is completed
         if needs_reward:
-            resp_log += 'Cognitive_completed' + '\n'
+            resp_log += 'Cognitive_completed' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
             reward_amount += 0.25
             reward.draw()
             win.flip()
@@ -203,24 +201,25 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
+        blockClock = core.Clock()
         wait_response = wait_cond(win,wait_length)
 
         ## wait block response processing
         if wait_response == 1:
-            resp_log += 'Quit_wait' + '\n'
-            resp_log += 'Traveling' + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+            resp_log += 'Quit_wait' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+            resp_log += 'Traveling' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
             traveling.draw()
             win.flip()
             core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
-            resp_log += 'Wait_completed' + '\n'
+            resp_log += 'Wait_completed' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
             reward_amount += 0.25
             reward.draw()
             win.flip()
             core.wait(2)
 
-    #print resp_log
+    print resp_log
 # close Window
 win.close()
 
