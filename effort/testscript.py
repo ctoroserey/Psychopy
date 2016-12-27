@@ -112,14 +112,17 @@ for row in reader:
     corrStroop.append(row[4])
     flankType.append(row[5])
     corrFlank.append(row[6])
-    coherDots.append(row[7])
-    direcDots.append(row[8])
+    coherDots.append(float(row[7]))
+    direcDots.append(float(row[8]))
     corrDots.append(row[9])
 condfile.close()
 
+print coherDots
+print direcDots
+
 ### Order of the conditions and the mental tasks
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
-mentalOrder = [1,2,3,1,2,3,1,2,3]
+mentalOrder = [1,2,3,1,2,3]
 
 ##----------------------- Overall condition loop ---------------------------
 for k in cond_order:
@@ -138,29 +141,32 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        miss = 0
+        miss = 0 # keeps track of incorrect answers or misses
         needs_reward = True # changes to False if the participant quits the block
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
+            param = randint(0,8) # chooses an integer to be used as the parameter index
             if i == 1:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
-                mental_response = stroop_cond('red','blue','red','green', 'left',win,length) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
+                mental_response = stroop_cond(stroopColor[param],stroopWord[param],leftColor[param],rightColor[param],corrStroop[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 2:
                 # Calls the flanker task function with the following order of inputs:
                 # (flanker type, correct answer left-right, win (window),time of task)
-                mental_response = flanker_cond('>><>>','left',win,length)
+                mental_response = flanker_cond(flankType[param],corrFlank[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 3:
                 # Calls the flanker task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
-                mental_response = dots_cond(0.4,180,'left',win,length)
+                print str(coherDots[param])
+                print str(direcDots[param])
+                mental_response = dots_cond(coherDots[param],direcDots[param],corrDots[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
