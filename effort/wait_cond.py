@@ -15,10 +15,6 @@ def wait_cond(win,length):
     # Stimulus Setup
     waitText = visual.TextStim(win=win,name='+',text='+',height=0.1)
 
-    # Stimulus
-    waitText = visual.TextStim(win=win,name='+',text='+',height=0.2)
-
-
     # ------Prepare to start Routine "wait"-------
     t = 0
     endExpNow = False # putative global quit, kept there because PsychoPy acts up when removed
