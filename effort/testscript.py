@@ -1,15 +1,6 @@
  #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-#Test version. The idea is to generate external trial functions and call them below in order to avoid clutter
-#
-#Consider:
-#    - Removing the experiment handler
-#    - Removing logs and using direct file output at the level of trial
-#    - Fix the logging. Response within functions might have to be completely changed so only one key press is logged.
-#    -
-
-
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
@@ -46,14 +37,6 @@ expInfo['expName'] = expName
 #### Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
 filename = _thisDir + os.sep + u'data/%s_%s' % (expInfo['participant'], expName) #expInfo['date'])
 
-
-
-#### An ExperimentHandler isn't essential but helps with data saving
-thisExp = data.ExperimentHandler(name=expName, version='',
-    extraInfo=expInfo, runtimeInfo=None,
-    originPath=None,
-    savePickle=True, saveWideText=True,
-    dataFileName=filename)
 
 
 #### save a log file for detail verbose info
@@ -94,9 +77,47 @@ isi = visual.TextStim(win, text='+')
 iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1)
 ## Cummulative reward amount
 reward_amount = 0
+## task lengths
+length = 1.5 # for each mental task
+wait_length = 10 # for the waiting block
 ## Log header
 resp_log = "Condition       RT      Total Time\n"
 
+### Importing task parameters
+## Stroop
+stroopColor = []
+stroopWord = []
+leftColor = []
+rightColor = []
+corrStroop = []
+## Flanker
+flankType = []
+corrFlank = []
+## Dot motion
+coherDots = []
+direcDots = []
+corrDots = []
+
+## Open the conditions file to begin import
+# The order of the columns in the .csv file should be:
+# stroopWord,stroopColor,leftColor,rightColor,corrStroop,flankType,corrFlank,coherDots,direcDots,corrDots
+
+condfile = open('conditions.csv','rb')
+reader = csv.reader(condfile,delimiter=',')
+for row in reader:
+    stroopWord.append(row[0])
+    stroopColor.append(row[1])
+    leftColor.append(row[2])
+    rightColor.append(row[3])
+    corrStroop.append(row[4])
+    flankType.append(row[5])
+    corrFlank.append(row[6])
+    coherDots.append(row[7])
+    direcDots.append(row[8])
+    corrDots.append(row[9])
+condfile.close()
+
+### Order of the conditions and the mental tasks
 cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
 mentalOrder = [1,2,3,1,2,3,1,2,3]
 
@@ -122,34 +143,24 @@ for k in cond_order:
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
-    if k == 1:
-        miss = 0
-        # mental effort block
-        message = visual.TextStim(win, text='Work')
-        message.draw()
-        win.flip()
-        core.wait(2)
-        for i in mentalOrder:
-            mental_response = None
-
             if i == 1:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
-                mental_response = stroop_cond('red','blue','red','green', 'left',win,1.5) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
+                mental_response = stroop_cond('red','blue','red','green', 'left',win,length) # Pressing space returns 1, thus updating mental_response to 1 and breaking the loop
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 2:
                 # Calls the flanker task function with the following order of inputs:
                 # (flanker type, correct answer left-right, win (window),time of task)
-                mental_response = flanker_cond('>><>>','left',win,1.5)
+                mental_response = flanker_cond('>><>>','left',win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 3:
                 # Calls the flanker task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
-                mental_response = dots_cond(0.4,180,'left',win,1.5)
+                mental_response = dots_cond(0.4,180,'left',win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
@@ -182,31 +193,14 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-    elif k == 2: # Wait block
-        message = visual.TextStim(win, text='Wait', height=0.1)
+    elif k == 2: # wait block
+        message = visual.TextStim(win, text='Wait',height=0.1)
         message.draw()
         win.flip()
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        wait_response = wait_cond(win,10)
-
-            print miss
-            if miss > 3:
-                break
-
-    elif k == 2:
-        # wait block
-        message = visual.TextStim(win, text='Wait')
-        message.draw()
-        win.flip()
-        core.wait(2)
-
-        wait_response = wait_cond(win,10)
-        message = visual.TextStim(win, text='+')
-        message.draw()
-        win.flip()
-        core.wait(0.5)
+        wait_response = wait_cond(win,wait_length)
 
         ## wait block response processing
         if wait_response == 1:
@@ -223,7 +217,7 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-    #print resp_log
+    print resp_log
 # close Window
 win.close()
 

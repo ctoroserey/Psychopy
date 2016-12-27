@@ -1,6 +1,5 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
-<<<<<<< HEAD
 # To do:
 #    - find out how to log the data properly, and trim further
 #    - remove Quit_stroop
