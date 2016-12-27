@@ -115,9 +115,8 @@ condfile.close()
 
 ### Order of the conditions and the mental tasks
 cond_order = [1,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
-#shuffle(cond_order)
+shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3]
-mentalOrder = [1,1,1,1,1]
 
 ##----------------------- Overall condition loop ---------------------------
 for k in cond_order:
@@ -220,6 +219,15 @@ for k in cond_order:
             core.wait(2)
 
     print resp_log
+
+# log writting
+logfile = open('log.csv','wb')
+writer = csv.writer(logfile,delimiter=',')
+for row in range(len(resp_log)):
+    print row
+    writer.writerow([row,resp_log[row]])
+logfile.close()
+
 # close Window
 win.close()
 
