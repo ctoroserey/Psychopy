@@ -1,14 +1,5 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
-# To do:
-#    - find out how to log the data properly, and trim further
-#    - remove Quit_stroop
-#    - Trim further
-#       - The response within the 'if len(theseKeys)' can be modified to just "if corrStroop in theseKeys:" But the whole response system needs to be modified.
-
-    ### I don't get GitHub
-    ### Or maybe...
-    ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
     from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
                                     STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
@@ -30,6 +21,7 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     stroopClock = core.Clock()
     stroopClock.reset()  # clock, to be used in the future
     response = 0
+    RT = 0
 
     # -------Start Routine "stroop"-------
     # present stimuli
@@ -56,5 +48,7 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
             else:
                 #print 'incorrect'
                 response = 3
+    print theseKeys
 
+## IMPORTANT: to return timestamps along with the answer, use a tuple like: 'return (response, RT)'
     return (response)

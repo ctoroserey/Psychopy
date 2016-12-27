@@ -101,7 +101,6 @@ corrDots = []
 ## Open the conditions file to begin import
 # The order of the columns in the .csv file should be:
 # stroopWord,stroopColor,leftColor,rightColor,corrStroop,flankType,corrFlank,coherDots,direcDots,corrDots
-
 condfile = open('conditions.csv','rU') # traditionally, rb should work. However, Mac inputs \r as line delimiter, so rU changes that to \n instead. See 'open' for info
 reader = csv.reader(condfile,delimiter=',')
 for row in reader:
@@ -117,12 +116,11 @@ for row in reader:
     corrDots.append(row[9])
 condfile.close()
 
-print flankType
-
 ### Order of the conditions and the mental tasks
-cond_order = [1,2,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
-shuffle(cond_order)
+cond_order = [1,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
+#shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3]
+mentalOrder = [1,1,1,1,1]
 
 ##----------------------- Overall condition loop ---------------------------
 for k in cond_order:
@@ -150,6 +148,7 @@ for k in cond_order:
             if i == 1:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
+                ## IMPORTANT: to return timestamps along with the answer, use a tuple like: '(mental_response, RT) = stroop_cond(etc)'
                 mental_response = stroop_cond(stroopColor[param],stroopWord[param],leftColor[param],rightColor[param],corrStroop[param],win,length)
                 isi.draw()
                 win.flip()
@@ -164,8 +163,6 @@ for k in cond_order:
             elif i == 3:
                 # Calls the flanker task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
-                print str(coherDots[param])
-                print str(direcDots[param])
                 mental_response = dots_cond(coherDots[param],direcDots[param],corrDots[param],win,length)
                 isi.draw()
                 win.flip()
@@ -223,7 +220,7 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-    print resp_log
+    #print resp_log
 # close Window
 win.close()
 
