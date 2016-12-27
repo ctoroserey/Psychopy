@@ -11,8 +11,13 @@ def wait_cond(win,length):
     import sys  # to get file system encoding
     import csv
 
+
     # Stimulus Setup
     waitText = visual.TextStim(win=win,name='+',text='+',height=0.1)
+
+    # Stimulus
+    waitText = visual.TextStim(win=win,name='+',text='+',height=0.2)
+
 
     # ------Prepare to start Routine "wait"-------
     t = 0

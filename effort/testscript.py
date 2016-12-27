@@ -6,6 +6,8 @@
 #Consider:
 #    - Removing the experiment handler
 #    - Removing logs and using direct file output at the level of trial
+#    - Fix the logging. Response within functions might have to be completely changed so only one key press is logged.
+#    -
 
 
 from __future__ import absolute_import, division
@@ -120,6 +122,16 @@ for k in cond_order:
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
+    if k == 1:
+        miss = 0
+        # mental effort block
+        message = visual.TextStim(win, text='Work')
+        message.draw()
+        win.flip()
+        core.wait(2)
+        for i in mentalOrder:
+            mental_response = None
+
             if i == 1:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
@@ -152,6 +164,7 @@ for k in cond_order:
                 resp_log += 'Incorr_miss_cog' + '\n'
                 miss += 1
 
+
             if miss > 2 or mental_response == 1:
                 needs_reward = False
                 resp_log += 'Traveling' + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
@@ -177,6 +190,24 @@ for k in cond_order:
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
         wait_response = wait_cond(win,10)
+
+            print miss
+            if miss > 3:
+                break
+
+    elif k == 2:
+        # wait block
+        message = visual.TextStim(win, text='Wait')
+        message.draw()
+        win.flip()
+        core.wait(2)
+
+        wait_response = wait_cond(win,10)
+        message = visual.TextStim(win, text='+')
+        message.draw()
+        win.flip()
+        core.wait(0.5)
+
         ## wait block response processing
         if wait_response == 1:
             resp_log += 'Quit_wait' + '\n'
@@ -192,7 +223,7 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-    print resp_log
+    #print resp_log
 # close Window
 win.close()
 

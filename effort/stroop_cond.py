@@ -1,5 +1,15 @@
 def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
+<<<<<<< HEAD
+# To do:
+#    - find out how to log the data properly, and trim further
+#    - remove Quit_stroop
+#    - Trim further
+#       - The response within the 'if len(theseKeys)' can be modified to just "if corrStroop in theseKeys:" But the whole response system needs to be modified.
+
+    ### I don't get GitHub
+    ### Or maybe...
+    ### See if these imports can be done globally. In any case, the overhead is negligible.
     from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
     from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
                                     STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
