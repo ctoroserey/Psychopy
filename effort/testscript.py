@@ -12,6 +12,7 @@ from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
 import sys  # to get file system encoding
 import csv
+import time
 from stroop_cond import stroop_cond
 from flanker_cond import flanker_cond
 from dots_cond import dots_cond
@@ -24,20 +25,20 @@ os.chdir(_thisDir)
 
 
 #### Store info about the experiment session
-expName = 'effort'  # from the Builder filename that created this script
+expName = 'costTask'  # from the Builder filename that created this script
 expInfo = {'participant':'', 'session':'001'}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False:
     core.quit()  # user pressed cancel
-expInfo['date'] = data.getDateStr()  # add a simple timestamp
+expInfo['date'] = time.strftime("%d%m%Y")#data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
 
 
 #### Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + u'data/%s_%s' % (expInfo['participant'], expName) #expInfo['date'])
-
-
+filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])
+print filename
+print _thisDir
 
 #### save a log file for detail verbose info
 #logFile = logging.LogFile(filename+'.log', level=logging.EXP)
@@ -115,7 +116,7 @@ for row in reader:
 condfile.close()
 
 ### Order of the conditions and the mental tasks
-cond_order = [1,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
+cond_order = [1]#,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
 shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3]
 
@@ -249,12 +250,12 @@ for k in cond_order:
 
 
 # log writting on csv file
-with open('log.csv','wb') as logfile:
+with open(filename+'_log.csv','wb') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
     logwriter.writerow(('Condition','RT','Total time'))
     for i in range(len(cond_log)):
         logwriter.writerow((cond_log[i],rt_log[i],totime_log[i]))
-    logwriter.writerow(('Total reward =',reward_amount))    
+    logwriter.writerow(('Total reward =',reward_amount))
 logfile.close()
 
 
