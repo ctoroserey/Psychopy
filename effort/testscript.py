@@ -77,9 +77,10 @@ reward_amount = 0
 ## task lengths
 length = 1.5 # for each mental task
 wait_length = 10 # for the waiting block
-## Log header, output as csv
-resp_log = 'Condition'+','+'RT'+','+'Total Time'+'\n'
-
+## Log aggregators, output as csv
+cond_log = []
+rt_log = []
+totime_log = []
 ### Importing task parameters
 ## Stroop
 stroopColor = []
@@ -123,7 +124,11 @@ for k in cond_order:
     # ITI cue
     set_iti = randint(1,10) # find out the best way to choose ITI with a defined probability
     iti.setText('Travel time ='+' '+str(set_iti)+' '+'seconds')
-    resp_log += 'Travel time ='+' '+str(set_iti) + ',' + str(globalClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+    # update logs
+    cond_log.append('Travel time ='+' '+str(set_iti))
+    rt_log.append(str(globalClock.getTime()))
+    totime_log.append(str(globalClock.getTime()))
+
     iti.draw()
     win.flip()
     core.wait(2)
@@ -168,17 +173,29 @@ for k in cond_order:
             ## mental_response processing
             # if space was pressed, break the loop and log it as a 1 (quit), otherwise log correct/incorrect responses onto resp_log as coded above
             if mental_response == 1:
-                resp_log += 'Quit_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+                # update logs
+                cond_log.append('Quit_cog')
+                rt_log.append(str(blockClock.getTime()))
+                totime_log.append(str(globalClock.getTime()))
             elif mental_response == 2:
-                resp_log += 'Correct_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+                # update logs
+                cond_log.append('Correct_cog')
+                rt_log.append(str(blockClock.getTime()))
+                totime_log.append(str(globalClock.getTime()))
             elif mental_response == 3:
-                resp_log += 'Incorr_miss_cog' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
                 miss += 1
+                # update logs
+                cond_log.append('Incorr_miss_cog')
+                rt_log.append(str(blockClock.getTime()))
+                totime_log.append(str(globalClock.getTime()))
 
 
             if miss > 2 or mental_response == 1:
                 needs_reward = False
-                resp_log += 'Traveling' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+                # update logs
+                cond_log.append('Traveling')
+                rt_log.append(str(blockClock.getTime()))
+                totime_log.append(str(globalClock.getTime()))
                 #travel.setText('Traveling'+' '+str(set_iti)+' '+'seconds') # think about it, but a bar might be better
                 traveling.draw()
                 win.flip()
@@ -187,7 +204,10 @@ for k in cond_order:
 
         # Give reward once block is completed
         if needs_reward:
-            resp_log += 'Cognitive_completed' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+            # update logs
+            cond_log.append('Cognitive_completed')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
             reward_amount += 0.25
             reward.draw()
             win.flip()
@@ -205,28 +225,39 @@ for k in cond_order:
 
         ## wait block response processing
         if wait_response == 1:
-            resp_log += 'Quit_wait' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
-            resp_log += 'Traveling' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'# + ' ' + str(set_iti) + ' ' + 'seconds' '\n'
+            # update logs
+            cond_log.append('Quit_wait')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
+            # update logs
+            cond_log.append('Traveling')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
             traveling.draw()
             win.flip()
             core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
-            resp_log += 'Wait_completed' + ',' + str(blockClock.getTime()) + ',' + str(globalClock.getTime()) + '\n'
+            # update logs
+            cond_log.append('Wait_completed')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
             reward_amount += 0.25
             reward.draw()
             win.flip()
             core.wait(2)
 
-    print resp_log
 
-# log writting
-logfile = open('log.csv','wb')
-writer = csv.writer(logfile,delimiter=',')
-for row in range(len(resp_log)):
-    print row
-    writer.writerow([row,resp_log[row]])
+# log writting on csv file
+with open('log.csv','wb') as logfile:
+    logwriter = csv.writer(logfile, delimiter=',')
+    logwriter.writerow(('Condition','RT','Total time'))
+    for i in range(len(cond_log)):
+        logwriter.writerow((cond_log[i],rt_log[i],totime_log[i]))
+    logwriter.writerow(('Total reward =',reward_amount))    
 logfile.close()
+
+
 
 # close Window
 win.close()
