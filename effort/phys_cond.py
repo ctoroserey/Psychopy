@@ -12,7 +12,7 @@ def phys_cond(win,length):
     import csv
 
     # Stimulus setup
-    physText = visual.TextStim(win=win,text='physType',name='physText',height=0.1)
+    physText = visual.TextStim(win=win,text='physType',name='physText',height=0.12)
 
     # ------Prepare to start Routine "phys"-------
     physClock = core.Clock()

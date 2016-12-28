@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """ To do:
-    - Set up an initial instruction screen so the beginning is not so sudden
-    - Set a last screen that says how much they made, and waits for a button press"""
+    - Might want to add some event.clearEvents instances
+    - change the mental tasks to a while loop similar to the physical task (maybe)"""
 
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -50,7 +50,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 
 ### Setup the Window
 win = visual.Window(
-    size=(600, 400), fullscr=False, screen=0,
+    size=(2560, 1440), fullscr=True, screen=0,
     allowGUI=False, allowStencil=False,
     monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
     blendMode='avg', useFBO=True)
@@ -68,7 +68,7 @@ else:
 ## Reward stimulus
 reward = visual.TextStim(win,height=0.1,text='$0.25')
 ## Traveling stimulus
-traveling = visual.TextStim(win, text='Traveling',height=0.1)
+traveling = visual.TextStim(win, text='Traveling',height=0.1,pos=(0.0,0.15))
 ## ISI stimulus
 isi = visual.TextStim(win, text='+')
 ## ITI stimulus
@@ -118,14 +118,14 @@ condfile.close()
 
 ### Order of the conditions and the mental tasks
 cond_order = [1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
-#cond_order = [3,3,3,3,3]
+#cond_order = [2,2,2,2]
 shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3] # each task is 2s, so having 6 equals 12 second blocks
 
 ##----------------------- Begin experiment ---------------------------------
 
 # initial window, waits for input to begin the experiment
-start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.05)
+start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.08)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
@@ -209,10 +209,20 @@ for k in cond_order:
                 cond_log.append('Traveling')
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
-                #travel.setText('Traveling'+' '+str(set_iti)+' '+'seconds') # think about it, but a bar might be better
-                traveling.draw()
+                # ITI
+                travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+                travel1.setAutoDraw(True)
+                traveling.setAutoDraw(True)
                 win.flip()
-                core.wait(set_iti) # ITI
+                for i in range(set_iti*60):
+                    travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                    travel2.draw()
+                    win.flip()
+                traveling.setAutoDraw(False)
+                travel1.setAutoDraw(False)
+                #traveling.draw()
+                #win.flip()
+                #core.wait(set_iti) # ITI
                 break
 
         # Give reward once block is completed
@@ -247,9 +257,20 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            traveling.draw()
+            # ITI
+            travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+            travel1.setAutoDraw(True)
+            traveling.setAutoDraw(True)
             win.flip()
-            core.wait(set_iti) #ITI
+            for i in range(set_iti*60):
+                travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                travel2.draw()
+                win.flip()
+            traveling.setAutoDraw(False)
+            travel1.setAutoDraw(False)
+            #traveling.draw()
+            #win.flip()
+            #core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
             # update logs
@@ -281,9 +302,20 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            traveling.draw()
+            # ITI
+            travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+            travel1.setAutoDraw(True)
+            traveling.setAutoDraw(True)
             win.flip()
-            core.wait(set_iti) #ITI
+            for i in range(set_iti*60):
+                travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                travel2.draw()
+                win.flip()
+            traveling.setAutoDraw(False)
+            travel1.setAutoDraw(False)
+            #traveling.draw()
+            #win.flip()
+            #core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
             # update logs
@@ -305,7 +337,7 @@ with open(filename+'_log.csv','wb') as logfile:
 logfile.close()
 
 # Final dialogue
-start = visual.TextStim(win, text='Great work! You earned $' + str(reward_amount),height=0.05)
+start = visual.TextStim(win, text='Great work! You earned $' + str(reward_amount),height=0.08)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
