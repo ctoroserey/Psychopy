@@ -37,8 +37,6 @@ expInfo['expName'] = expName
 
 #### Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
 filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])
-print filename
-print _thisDir
 
 #### save a log file for detail verbose info
 #logFile = logging.LogFile(filename+'.log', level=logging.EXP)
@@ -47,7 +45,7 @@ print _thisDir
 
 ### Setup the Window
 win = visual.Window(
-    size=(960, 600), fullscr=False, screen=0,
+    size=(2560, 1440), fullscr=True, screen=0,
     allowGUI=False, allowStencil=False,
     monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
     blendMode='avg', useFBO=True)
@@ -116,7 +114,7 @@ for row in reader:
 condfile.close()
 
 ### Order of the conditions and the mental tasks
-cond_order = [1]#,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
+cond_order = [1,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
 shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3]
 
@@ -255,7 +253,7 @@ with open(filename+'_log.csv','wb') as logfile:
     logwriter.writerow(('Condition','RT','Total time'))
     for i in range(len(cond_log)):
         logwriter.writerow((cond_log[i],rt_log[i],totime_log[i]))
-    logwriter.writerow(('Total reward =',reward_amount))
+    logwriter.writerow(('Total reward = $',reward_amount))
 logfile.close()
 
 
