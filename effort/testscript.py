@@ -1,6 +1,10 @@
  #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+""" To do:
+    - Set up an initial instruction screen so the beginning is not so sudden
+    - Set a last screen that says how much they made, and waits for a button press"""
+
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
@@ -13,6 +17,7 @@ import os  # handy system and path functions
 import sys  # to get file system encoding
 import csv
 import time
+from phys_cond import phys_cond
 from stroop_cond import stroop_cond
 from flanker_cond import flanker_cond
 from dots_cond import dots_cond
@@ -45,7 +50,7 @@ filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expNa
 
 ### Setup the Window
 win = visual.Window(
-    size=(2560, 1440), fullscr=True, screen=0,
+    size=(600, 400), fullscr=False, screen=0,
     allowGUI=False, allowStencil=False,
     monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
     blendMode='avg', useFBO=True)
@@ -58,8 +63,6 @@ else:
     frameDur = 1.0 / 60.0  # could not measure, so guess
 
 
-#### Create some handy timers
-globalClock = core.Clock()  # to track the time since experiment started
 
 ##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
@@ -114,10 +117,21 @@ for row in reader:
 condfile.close()
 
 ### Order of the conditions and the mental tasks
-cond_order = [1,1,2,1,2,1,1,2,1,2,2,1,1,2,1,2]
+cond_order = [1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
+#cond_order = [3,3,3,3,3]
 shuffle(cond_order)
-mentalOrder = [1,2,3,1,2,3]
+mentalOrder = [1,2,3,1,2,3] # each task is 2s, so having 6 equals 12 second blocks
 
+##----------------------- Begin experiment ---------------------------------
+
+# initial window, waits for input to begin the experiment
+start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.05)
+start.draw()
+win.flip()
+event.waitKeys(keyList=['return'])
+
+
+globalClock = core.Clock()  # to track the time since experiment started
 ##----------------------- Overall condition loop ---------------------------
 for k in cond_order:
     # ITI cue
@@ -133,7 +147,7 @@ for k in cond_order:
     core.wait(2)
     # Condition selection
     if k == 1: # Cogtnitive effort block
-        message = visual.TextStim(win, text='Mental work', height=0.1)
+        message = visual.TextStim(win, text='Mental Effort', height=0.1)
         message.draw()
         win.flip()
         core.wait(2)
@@ -220,6 +234,7 @@ for k in cond_order:
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
         blockClock = core.Clock()
+        # Calls the wait block function, wait_length = length of block
         wait_response = wait_cond(win,wait_length)
 
         ## wait block response processing
@@ -246,6 +261,39 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
+    elif k == 3: # physical effort block
+        message = visual.TextStim(win, text='Physical Effort',height=0.1)
+        message.draw()
+        win.flip()
+        core.wait(2)
+        if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
+            core.quit()
+        blockClock = core.Clock()
+        # Calls the physical effort block function, wait_length = length of block
+        phys_response = phys_cond(win,wait_length)
+        ## Physical effort block response processing
+        if phys_response == 1:
+            # update logs
+            cond_log.append('Quit_phys')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
+            # update logs
+            cond_log.append('Traveling')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
+            traveling.draw()
+            win.flip()
+            core.wait(set_iti) #ITI
+        else:
+            # Give reward once block is completed
+            # update logs
+            cond_log.append('Phys_completed')
+            rt_log.append(str(blockClock.getTime()))
+            totime_log.append(str(globalClock.getTime()))
+            reward_amount += 0.25
+            reward.draw()
+            win.flip()
+            core.wait(2)
 
 # log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
@@ -256,7 +304,11 @@ with open(filename+'_log.csv','wb') as logfile:
     logwriter.writerow(('Total reward = $',reward_amount))
 logfile.close()
 
-
+# Final dialogue
+start = visual.TextStim(win, text='Great work! You earned $' + str(reward_amount),height=0.05)
+start.draw()
+win.flip()
+event.waitKeys(keyList=['return'])
 
 # close Window
 win.close()
