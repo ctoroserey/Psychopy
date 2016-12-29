@@ -140,7 +140,7 @@ for k in cond_order:
     travel1.draw()
     win.flip()
     core.wait(2)
-    travel1.setFillColor(None)
+    travel1.setFillColor(None) # otherwise the bar will just be invariant below
     # update logs
     cond_log.append('Travel time ='+' '+str(set_iti))
     rt_log.append(str(globalClock.getTime()))
@@ -249,7 +249,7 @@ for k in cond_order:
         wait_response = wait_cond(win,wait_length)
 
         ## wait block response processing
-        if wait_response == 1:
+        if wait_response == 1: # if quit
             # update logs
             cond_log.append('Quit_wait')
             rt_log.append(str(blockClock.getTime()))
@@ -295,7 +295,7 @@ for k in cond_order:
         # Calls the physical effort block function, wait_length = length of block
         phys_response = phys_cond(win,wait_length)
         ## Physical effort block response processing
-        if phys_response == 1:
+        if phys_response == 1: # if quit
             # update logs
             cond_log.append('Quit_phys')
             rt_log.append(str(blockClock.getTime()))
@@ -329,6 +329,8 @@ for k in cond_order:
             reward.draw()
             win.flip()
             core.wait(2)
+
+    ## Traveling bar and log could be here instead. Begin with 'if needs_reward == False'
 
 ## log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
