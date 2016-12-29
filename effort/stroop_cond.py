@@ -12,9 +12,9 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
     import csv
 
     # Stimuli setup
-    target = visual.TextStim(win=win,text=word,name='target',color=color,colorSpace='rgb',height=0.1);
-    circleLeft = visual.Polygon(win=win,units='cm',fillColor=rgbOne,fillColorSpace='rgb',edges=1000,size=(2, 2),pos=(-4, -4))
-    circleRight = visual.Polygon(win=win,units='cm',fillColor=rgbTwo,fillColorSpace='rgb',edges=1000, size=(2, 2),pos=(4, -4))
+    target = visual.TextStim(win=win,text=word,name='target',color=color,colorSpace='rgb',height=0.25);
+    circleLeft = visual.Polygon(win=win,units='cm',fillColor=rgbOne,fillColorSpace='rgb',edges=1000,size=(2, 2),pos=(-4, -3))
+    circleRight = visual.Polygon(win=win,units='cm',fillColor=rgbTwo,fillColorSpace='rgb',edges=1000, size=(2, 2),pos=(4, -3))
 
 
     # Prepare to start Routine "stroop"

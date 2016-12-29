@@ -3,7 +3,8 @@
 
 """ To do:
     - Might want to add some event.clearEvents instances
-    - change the mental tasks to a while loop similar to the physical task (maybe)"""
+    - change the mental tasks to a while loop similar to the physical task (maybe)
+    - Instead of having the traveling draw on each condition, use break and have one instance of it at the end of the loop?"""
 
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -24,10 +25,11 @@ from dots_cond import dots_cond
 from wait_cond  import wait_cond
 from random import randint
 
+
+##------------------------ Basic experiment settings -------------------------
 #### Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
 os.chdir(_thisDir)
-
 
 #### Store info about the experiment session
 expName = 'costTask'  # from the Builder filename that created this script
@@ -38,15 +40,8 @@ if dlg.OK == False:
 expInfo['date'] = time.strftime("%d%m%Y")#data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
-
-
 #### Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
 filename = _thisDir + os.sep + u'data/%s_%s_%s' % (expInfo['participant'], expName, expInfo['date'])
-
-#### save a log file for detail verbose info
-#logFile = logging.LogFile(filename+'.log', level=logging.EXP)
-#logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
-
 
 ### Setup the Window
 win = visual.Window(
@@ -67,13 +62,14 @@ else:
 ##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
 reward = visual.TextStim(win,height=0.1,text='$0.25')
-## Traveling stimulus
-traveling = visual.TextStim(win, text='Traveling',height=0.1,pos=(0.0,0.15))
+## Traveling stimuli
+traveling = visual.TextStim(win, text='Traveling',height=0.1,pos=(0.0,0.15)) # Just the text
+travel1 = visual.Rect(win=win,height=0.1,width=0.1,lineWidth=2,lineColor='white') # Bar borders (width=((set_iti*60)/1000))
+travel2 = visual.Rect(win=win,height=0.1,width=0.1, fillColor='green') # Green progress bar
 ## ISI stimulus
 isi = visual.TextStim(win, text='+')
-## ITI stimulus
-#iti = visual.Rect(win=win,width=0.5,height=0.5,fillColor='green',fillColorSpace='rgb') # not sure why a rectangle is needed
-iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1)
+## ITI cue stimulus
+iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1,pos=(0.0,0.15))
 ## Cummulative reward amount
 reward_amount = 0
 ## task lengths
@@ -130,21 +126,25 @@ start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
 
-
 globalClock = core.Clock()  # to track the time since experiment started
+
 ##----------------------- Overall condition loop ---------------------------
+
 for k in cond_order:
     # ITI cue
     set_iti = randint(1,10) # find out the best way to choose ITI with a defined probability
     iti.setText('Travel time ='+' '+str(set_iti)+' '+'seconds')
+    travel1.setWidth((set_iti*60)/1000)
+    travel1.setFillColor('green')
+    iti.draw()
+    travel1.draw()
+    win.flip()
+    core.wait(2)
+    travel1.setFillColor(None)
     # update logs
     cond_log.append('Travel time ='+' '+str(set_iti))
     rt_log.append(str(globalClock.getTime()))
     totime_log.append(str(globalClock.getTime()))
-
-    iti.draw()
-    win.flip()
-    core.wait(2)
     # Condition selection
     if k == 1: # Cogtnitive effort block
         message = visual.TextStim(win, text='Mental Effort', height=0.1)
@@ -210,16 +210,17 @@ for k in cond_order:
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
                 # ITI
-                travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+                travel1.setWidth((set_iti*60)/1000)
                 travel1.setAutoDraw(True)
                 traveling.setAutoDraw(True)
                 win.flip()
                 for i in range(set_iti*60):
-                    travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                    travel2.setWidth(i/1000)
                     travel2.draw()
                     win.flip()
                 traveling.setAutoDraw(False)
                 travel1.setAutoDraw(False)
+                ## This ITI just shows the word
                 #traveling.draw()
                 #win.flip()
                 #core.wait(set_iti) # ITI
@@ -258,16 +259,17 @@ for k in cond_order:
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
             # ITI
-            travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+            travel1.setWidth((set_iti*60)/1000)
             travel1.setAutoDraw(True)
             traveling.setAutoDraw(True)
             win.flip()
             for i in range(set_iti*60):
-                travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                travel2.setWidth(i/1000)
                 travel2.draw()
                 win.flip()
             traveling.setAutoDraw(False)
             travel1.setAutoDraw(False)
+            ## This ITI just shows the word
             #traveling.draw()
             #win.flip()
             #core.wait(set_iti) #ITI
@@ -303,16 +305,17 @@ for k in cond_order:
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
             # ITI
-            travel1 = visual.Rect(win=win,height=0.1,width=((set_iti*60)/1000),lineWidth=2,lineColor='white')
+            travel1.setWidth((set_iti*60/1000))
             travel1.setAutoDraw(True)
             traveling.setAutoDraw(True)
             win.flip()
             for i in range(set_iti*60):
-                travel2 = visual.Rect(win=win,height=0.1,width=i/1000, fillColor='green')
+                travel2.setWidth(i/1000)
                 travel2.draw()
                 win.flip()
             traveling.setAutoDraw(False)
             travel1.setAutoDraw(False)
+            ## This ITI just shows the word
             #traveling.draw()
             #win.flip()
             #core.wait(set_iti) #ITI
@@ -327,7 +330,7 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-# log writting on csv file
+## log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
     logwriter.writerow(('Condition','RT','Total time'))
@@ -336,7 +339,7 @@ with open(filename+'_log.csv','wb') as logfile:
     logwriter.writerow(('Total reward = $',reward_amount))
 logfile.close()
 
-# Final dialogue
+## Final screen showing final reward amount
 start = visual.TextStim(win, text='Great work! You earned $' + str(reward_amount),height=0.08)
 start.draw()
 win.flip()
