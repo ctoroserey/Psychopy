@@ -12,7 +12,7 @@ def flanker_cond(flankType, corrFlank,win,length):
     import csv
 
     # Stimulus setup
-    flankText = visual.TextStim(win=win,text=flankType,name='flankText',height=0.1)
+    flankText = visual.TextStim(win=win,text=flankType,name='flankText',height=0.15)
 
     # ------Prepare to start Routine "flanker"-------
     flankerClock = core.Clock()

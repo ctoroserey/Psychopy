@@ -3,8 +3,7 @@
 
 """ To do:
     - Might want to add some event.clearEvents instances
-    - change the mental tasks to a while loop similar to the physical task (maybe)
-    - Instead of having the traveling draw on each condition, use break and have one instance of it at the end of the loop?"""
+    - change the mental tasks to a while loop similar to the physical task (maybe)"""
 
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -113,7 +112,8 @@ for row in reader:
 condfile.close()
 
 ### Order of the conditions and the mental tasks
-cond_order = [1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
+conds = ['Cog','Wait','Phys'] # Condition codes in order from 1-3, used for logging
+cond_order = [1,2,3]#,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
 #cond_order = [2,2,2,2]
 shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3] # each task is 2s, so having 6 equals 12 second blocks
@@ -141,8 +141,10 @@ for k in cond_order:
     win.flip()
     core.wait(2)
     travel1.setFillColor(None) # otherwise the bar will just be invariant below
+    blockClock = core.Clock() # sets a timer for the block
+    needs_reward = True # changes to False if the participant quits the block
     # update logs
-    cond_log.append('Travel time ='+' '+str(set_iti))
+    cond_log.append(str(conds[k-1])+', ITI = '+str(set_iti)) # use 'conds' and 'set_iti' to log the upcoming block
     rt_log.append(str(globalClock.getTime()))
     totime_log.append(str(globalClock.getTime()))
     # Condition selection
@@ -153,9 +155,8 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        blockClock = core.Clock()
         miss = 0 # keeps track of incorrect answers or misses
-        needs_reward = True # changes to False if the participant quits the block
+        # needs_reward = True # changes to False if the participant quits the block
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
@@ -209,18 +210,7 @@ for k in cond_order:
                 cond_log.append('Traveling')
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
-                # ITI
-                travel1.setWidth((set_iti*60)/1000)
-                travel1.setAutoDraw(True)
-                traveling.setAutoDraw(True)
-                win.flip()
-                for i in range(set_iti*60):
-                    travel2.setWidth(i/1000)
-                    travel2.draw()
-                    win.flip()
-                traveling.setAutoDraw(False)
-                travel1.setAutoDraw(False)
-                ## This ITI just shows the word
+                ## This ITI just shows the word (old)
                 #traveling.draw()
                 #win.flip()
                 #core.wait(set_iti) # ITI
@@ -244,12 +234,12 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        blockClock = core.Clock()
         # Calls the wait block function, wait_length = length of block
         wait_response = wait_cond(win,wait_length)
 
         ## wait block response processing
         if wait_response == 1: # if quit
+            needs_reward = False
             # update logs
             cond_log.append('Quit_wait')
             rt_log.append(str(blockClock.getTime()))
@@ -258,18 +248,7 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            # ITI
-            travel1.setWidth((set_iti*60)/1000)
-            travel1.setAutoDraw(True)
-            traveling.setAutoDraw(True)
-            win.flip()
-            for i in range(set_iti*60):
-                travel2.setWidth(i/1000)
-                travel2.draw()
-                win.flip()
-            traveling.setAutoDraw(False)
-            travel1.setAutoDraw(False)
-            ## This ITI just shows the word
+            ## This ITI just shows the word (old)
             #traveling.draw()
             #win.flip()
             #core.wait(set_iti) #ITI
@@ -291,11 +270,11 @@ for k in cond_order:
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        blockClock = core.Clock()
         # Calls the physical effort block function, wait_length = length of block
         phys_response = phys_cond(win,wait_length)
         ## Physical effort block response processing
         if phys_response == 1: # if quit
+            needs_reward = False
             # update logs
             cond_log.append('Quit_phys')
             rt_log.append(str(blockClock.getTime()))
@@ -304,18 +283,7 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            # ITI
-            travel1.setWidth((set_iti*60/1000))
-            travel1.setAutoDraw(True)
-            traveling.setAutoDraw(True)
-            win.flip()
-            for i in range(set_iti*60):
-                travel2.setWidth(i/1000)
-                travel2.draw()
-                win.flip()
-            traveling.setAutoDraw(False)
-            travel1.setAutoDraw(False)
-            ## This ITI just shows the word
+            ## This ITI just shows the word (old)
             #traveling.draw()
             #win.flip()
             #core.wait(set_iti) #ITI
@@ -330,7 +298,19 @@ for k in cond_order:
             win.flip()
             core.wait(2)
 
-    ## Traveling bar and log could be here instead. Begin with 'if needs_reward == False'
+    ## If the participant quits the block and forfeits the reward, jump here
+    if needs_reward == False:
+        # ITI
+        travel1.setWidth((set_iti*60)/1000)
+        travel1.setAutoDraw(True)
+        traveling.setAutoDraw(True)
+        win.flip()
+        for i in range(set_iti*60):
+            travel2.setWidth(i/1000)
+            travel2.draw()
+            win.flip()
+        traveling.setAutoDraw(False)
+        travel1.setAutoDraw(False)
 
 ## log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
