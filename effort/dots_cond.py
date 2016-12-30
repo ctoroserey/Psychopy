@@ -20,8 +20,7 @@ def dots_cond(coherDots,direcDots,corrDots,win,length):
 
 
     # ------Prepare to start Routine "dots"-------
-    dotsClock = core.Clock()
-    dotsClock.reset()  # clock
+    dotsClock = core.Clock()  # clock, to be used in the future
     response = 0
 
     # -------Start Routine "dots"-------

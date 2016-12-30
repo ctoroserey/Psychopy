@@ -15,8 +15,7 @@ def flanker_cond(flankType, corrFlank,win,length):
     flankText = visual.TextStim(win=win,text=flankType,name='flankText',height=0.15)
 
     # ------Prepare to start Routine "flanker"-------
-    flankerClock = core.Clock()
-    flankerClock.reset()  # clock, to be used in the future
+    flankerClock = core.Clock()  # clock, to be used in the future
     response = 0
 
     # -------Start Routine "flanker"-------

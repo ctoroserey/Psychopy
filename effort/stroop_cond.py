@@ -18,10 +18,8 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
 
 
     # Prepare to start Routine "stroop"
-    stroopClock = core.Clock()
-    stroopClock.reset()  # clock, to be used in the future
+    stroopClock = core.Clock() # clock, to be used in the future
     response = 0
-    RT = 0
 
     # -------Start Routine "stroop"-------
     # present stimuli
@@ -49,5 +47,5 @@ def stroop_cond(color, word, rgbOne, rgbTwo, corrStroop, win,length):
                 #print 'incorrect'
                 response = 3
 
-## IMPORTANT: to return timestamps along with the answer, use a tuple like: 'return (response, RT)'
-    return (response)
+    ## IMPORTANT: to return timestamps along with the answer, use a tuple like: 'return (response, RT)'
+    return response

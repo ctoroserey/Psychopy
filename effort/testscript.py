@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ To do:
-    - Might want to add some event.clearEvents instances
-    - change the mental tasks to a while loop similar to the physical task (maybe)"""
+    - Might want to add some event.clearEvents instances"""
 
 from __future__ import absolute_import, division
 from psychopy import locale_setup, gui, visual, core, data, event, logging, sound
@@ -113,11 +112,11 @@ condfile.close()
 
 ### Order of the conditions and the mental tasks
 conds = ['Cog','Wait','Phys'] # Condition codes in order from 1-3, used for logging
-cond_order = [1,2,3]#,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
-#cond_order = [2,2,2,2]
+cond_order = [1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]
+#cond_order = [1,1,1,1]
 shuffle(cond_order)
 mentalOrder = [1,2,3,1,2,3] # each task is 2s, so having 6 equals 12 second blocks
-
+#mentalOrder = [1,1,1,1,1]
 ##----------------------- Begin experiment ---------------------------------
 
 # initial window, waits for input to begin the experiment
@@ -147,7 +146,7 @@ for k in cond_order:
     cond_log.append(str(conds[k-1])+', ITI = '+str(set_iti)) # use 'conds' and 'set_iti' to log the upcoming block
     rt_log.append(str(globalClock.getTime()))
     totime_log.append(str(globalClock.getTime()))
-    # Condition selection
+    ## Condition selection
     if k == 1: # Cogtnitive effort block
         message = visual.TextStim(win, text='Mental Effort', height=0.1)
         message.draw()
@@ -160,6 +159,7 @@ for k in cond_order:
         shuffle(mentalOrder)
         for i in mentalOrder:
             mental_response = None
+            RT = 0
             param = randint(0,8) # chooses an integer to be used as the parameter index
             if i == 1:
                 # Calls the stroop task function with the following order of inputs:
@@ -210,10 +210,6 @@ for k in cond_order:
                 cond_log.append('Traveling')
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
-                ## This ITI just shows the word (old)
-                #traveling.draw()
-                #win.flip()
-                #core.wait(set_iti) # ITI
                 break
 
         # Give reward once block is completed
@@ -248,10 +244,6 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            ## This ITI just shows the word (old)
-            #traveling.draw()
-            #win.flip()
-            #core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
             # update logs
@@ -283,10 +275,6 @@ for k in cond_order:
             cond_log.append('Traveling')
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
-            ## This ITI just shows the word (old)
-            #traveling.draw()
-            #win.flip()
-            #core.wait(set_iti) #ITI
         else:
             # Give reward once block is completed
             # update logs
@@ -319,6 +307,7 @@ with open(filename+'_log.csv','wb') as logfile:
     for i in range(len(cond_log)):
         logwriter.writerow((cond_log[i],rt_log[i],totime_log[i]))
     logwriter.writerow(('Total reward = $',reward_amount))
+    logwriter.writerow((('ID: '+expInfo['participant']), 'Date: '+expInfo['date'])) # in case that the file gets renamed
 logfile.close()
 
 ## Final screen showing final reward amount
