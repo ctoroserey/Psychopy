@@ -1,0 +1,40 @@
+Condition,RT,Total time
+"Begin block, ITI = 5",5.06314992905,5.06315302849
+"Start trial, exp rwd = $0.25",0,5.06319093704
+"Completed, rwd = $0.25",12.3908259869,17.4540131092
+"Start trial, exp rwd = $0.25",0,24.4897739887
+"Quit, traveling",5.13780808449,29.6275761127
+"Start trial, exp rwd = $0.25",0,34.644972086
+"Quit, traveling",6.17131495476,40.8162801266
+"Begin block, ITI = 8",50.8868689537,50.8868720531
+"Start trial, exp rwd = $0.15",0,50.8868911266
+"Quit, traveling",4.08683204651,54.9737229347
+"Start trial, exp rwd = $0.15",0,62.992538929
+"Quit, traveling",4.10322904587,67.0957620144
+"Start trial, exp rwd = $0.05",0,75.1153159142
+"Completed, rwd = $0.05",12.3743751049,87.4896829128
+"Begin block, ITI = 3",102.562986135,102.562988997
+"Start trial, exp rwd = $0.25",0,102.563007116
+"Quit, traveling",5.11963701248,107.682646036
+"Start trial, exp rwd = $0.15",0,110.701390982
+"Quit, traveling",4.10232806206,114.803710938
+"Start trial, exp rwd = $0.25",0,117.820461035
+"Quit, traveling",4.10338592529,121.923839092
+"Start trial, exp rwd = $0.05",0,124.940805912
+"Quit, traveling",4.10316300392,129.043962002
+"Start trial, exp rwd = $0.25",0,132.061162949
+"Quit, traveling",4.10339999199,136.164556026
+"Begin block, ITI = 1",144.217216969,144.217220068
+"Start trial, exp rwd = $0.25",0,144.217237949
+"Quit, traveling",4.08722996712,148.304469109
+"Start trial, exp rwd = $0.05",0,149.320164919
+"Quit, traveling",4.10353302956,153.423690081
+"Start trial, exp rwd = $0.05",0,154.451757908
+"Quit, traveling",4.09095811844,158.542709112
+"Start trial, exp rwd = $0.25",0,159.55965209
+"Quit, traveling",4.10225987434,163.66190505
+"Start trial, exp rwd = $0.15",0,164.678992033
+"Quit, traveling",4.10220503807,168.781191111
+"Start trial, exp rwd = $0.05",0,169.797259092
+"Quit, traveling",4.10410714149,173.901358128
+Total reward = $,0.3
