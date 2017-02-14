@@ -30,7 +30,7 @@ expInfo = {'participant':'', 'session':'001'}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False:
     core.quit()  # user pressed cancel
-expInfo['date'] = time.strftime("%d%m%Y")#data.getDateStr()  # add a simple timestamp
+expInfo['date'] = time.strftime("%d%m%Y") # add a simple timestamp
 expInfo['expName'] = expName
 
 #### Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
@@ -72,7 +72,7 @@ blockLength = 150 # how long in seconds each iti block will be
 ## Log aggregators, output as csv
 iti_log = [] # what iti block we're in
 rwd_log = [] # current reward opportunity
-deci_log = [] # did they complete (1), quit (2), or fail (3) the block
+deci_log = [] # did they quit (0), complete (1), or fail (2) the block
 rt_log = [] # within-trial time of decision/completion
 totime_log = [] # absolute time throughout the experimental session
 
@@ -84,7 +84,7 @@ rewardOrder = [0.05,0.05,0.15,0.15,0.25,0.25]
 ##----------------------- Begin experiment ---------------------------------
 
 # initial window, waits for input to begin the experiment
-start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.06)
+start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.05)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
@@ -103,8 +103,9 @@ for k in range(len(iti_order)):
     iti.setText('Travel time ='+' '+str(travel)+' '+'seconds \n'+'Handling time ='+' '+str(handling)+' '+'seconds')
     travel1.setWidth((travel*60)/1000)
     travel1.setFillColor('green')
-    travel1.draw()
+    #travel1.setAutoDraw(True)
     iti.draw()
+    travel1.draw()
     win.flip()
     core.wait(4)
     travel1.setFillColor(None) # otherwise the bar will just be invariant below
@@ -131,15 +132,15 @@ for k in range(len(iti_order)):
         if wait_response == 1: # if quit
             needs_reward = False
             # update logs
-            iti_log.append(iti_order[k])
+            iti_log.append(str(handling))
             rwd_log.append(j)
-            deci_log.append(2)
+            deci_log.append(0)
             rt_log.append(str(blockClock.getTime()))
             totime_log.append(str(globalClock.getTime()))
         else:
             # Give reward once block is completed
             # update logs
-            iti_log.append(iti_order[k])
+            iti_log.append(str(handling))
             rwd_log.append(j)
             deci_log.append(1)
             rt_log.append(str(blockClock.getTime()))
@@ -167,14 +168,15 @@ for k in range(len(iti_order)):
             counter = 0
         else:
             counter += 1
-
+    #travel1.setAutoDraw(False)
 ## log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
-    logwriter.writerow(('ITI','Expected Reward','Decision (1=complete; 2=quit; 3=failed)','RT','Total Time'))
+    # had to eliminate the statement below because the header was causing issues while loading into Matlab
+    #logwriter.writerow(('ITI','Expected_Reward','Decision (0=quit;1=complete; 2=failed)','RT','Total_Time'))
     for i in range(len(iti_log)):
         logwriter.writerow((iti_log[i],rwd_log[i],deci_log[i],rt_log[i],totime_log[i]))
-    logwriter.writerow(('Total reward = $',reward_amount))
+    logwriter.writerow(('Total_reward=$',reward_amount))
 logfile.close()
 
 ## Final screen showing final reward amount

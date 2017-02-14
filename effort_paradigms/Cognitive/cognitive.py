@@ -55,26 +55,29 @@ else:
 
 ##-------------------- Setting up stimuli, etc. ----------------------------
 ## Reward stimulus
-reward = visual.TextStim(win,height=0.1,text='$0.25')
+reward = visual.TextStim(win,height=0.08,text='$0.25')
 ## Traveling stimuli
-traveling = visual.TextStim(win, text='Traveling',height=0.1,pos=(0.0,0.15)) # Just the text
-travel1 = visual.Rect(win=win,height=0.1,width=0.1,lineWidth=2,lineColor='white') # Bar borders (width=((k*60)/1000))
-travel2 = visual.Rect(win=win,height=0.1,width=0.1, fillColor='green') # Green progress bar
+traveling = visual.TextStim(win, text='Traveling',height=0.08,pos=(0.0,0.0)) # Just the text
+travel1 = visual.Rect(win=win,height=0.1,width=100,lineWidth=2,lineColor='white',pos=(0.0,-0.55)) # Bar borders (width=((k*60)/1000))
+travel2 = visual.Rect(win=win,height=0.1,width=100, fillColor='green',pos=(0.0,-0.55)) # Green progress bar
 ## ISI stimulus
 isi = visual.TextStim(win, text='+')
 ## ITI cue stimulus
-iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.1,pos=(0.0,0.15))
+iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.08,pos=(0.0,0.0))
 ## Cummulative reward amount
 reward_amount = 0
 ## task lengths
 length = 1.5 # for each mental task
 blockLength = 150 # how long in seconds each iti block will be
+## frameRate
+frames = 60;
 ## Log aggregators, output as csv
 iti_log = [] # what iti block we're in
 rwd_log = [] # current reward opportunity
-deci_log = [] # did they complete (1), quit (2), or fail (3) the block
+deci_log = [] # did they quit (0), complete (1), or fail (2) the block
 rt_log = [] # within-trial time of decision/completion
 totime_log = [] # absolute time throughout the experimental session
+
 ### Importing task parameters
 ## Stroop
 stroopColor = []
@@ -109,15 +112,17 @@ for row in reader:
 condfile.close()
 
 ### Order of the conditions and the mental tasks
-iti_order = [1,1,3,3,5,5,8,8]
+# each combo is [travel,handling]
+# iti_order = [1,1,3,3,5,5,8,8]
+iti_order = [[2,13],[2,13],[5,10],[5,10],[10,5],[10,5],[13,2],[13,2]]
 shuffle(iti_order)
-mentalOrder = [1,2,3,1,2] # each task is 2s, so having 5 equals 10 second trials
+#mentalOrder = [1,2,3,1,2] # each task is 2s, so having 5 equals 10 second trials
 rewardOrder = [0.05,0.05,0.15,0.15,0.25,0.25]
 
 ##----------------------- Begin experiment ---------------------------------
 
 # initial window, waits for input to begin the experiment
-start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.06)
+start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.05)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
@@ -126,13 +131,16 @@ globalClock = core.Clock()  # to track the time since experiment started
 
 ##----------------------- Overall condition loop ---------------------------
 
-for k in iti_order:
+for k in range(len(iti_order)):
+    travel = iti_order[k][0]
+    handling = iti_order[k][1]
+    print handling
     # ITI cue
     isi.draw()
     win.flip()
     core.wait(1)
-    iti.setText('Travel time ='+' '+str(k)+' '+'seconds')
-    travel1.setWidth((k*60)/1000)
+    iti.setText('Travel time ='+' '+str(travel)+' '+'seconds \n'+'Handling time ='+' '+str(handling)+' '+'seconds')
+    travel1.setWidth((travel*frames)/1000)
     travel1.setFillColor('green')
     iti.draw()
     travel1.draw()
@@ -144,23 +152,27 @@ for k in iti_order:
     counter = 0 # to help distribute rewards more evenly
     # Begin trials
     while itiClock.getTime() < blockLength:
+        # look into seeding
         if counter == 0:
             shuffle(rewardOrder)
         j = rewardOrder[counter]
         needs_reward = True # changes to False if the participant quits the block
         miss = 0 # keeps track of incorrect answers or misses
         blockClock = core.Clock() # sets a timer for the trial
-        message = visual.TextStim(win, text='Next reward = $'+str(j), height=0.1)
+        message = visual.TextStim(win, text='Next reward = $'+str(j), height=0.08)
         message.draw()
         win.flip()
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        shuffle(mentalOrder)
+        # temporary solution to the trial length. I need to recalculate the optimal behavior at 16 seconds so dividing handling by 2 remains an integer
+        mentalOrder = np.random.randint(0,high=3,size=round(handling/2))
+        print mentalOrder
+        # trial of tasks begins here
         for i in mentalOrder:
             mental_response = None
             param = randint(0,8) # chooses an integer to be used as the parameter index
-            if i == 1:
+            if i == 0:
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 ## IMPORTANT: to return timestamps along with the answer, use a tuple like: '(mental_response, RT) = stroop_cond(etc)'
@@ -168,15 +180,15 @@ for k in iti_order:
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
-            elif i == 2:
+            elif i == 1:
                 # Calls the flanker task function with the following order of inputs:
                 # (flanker type, correct answer left-right, win (window),time of task)
                 mental_response = flanker_cond(flankType[param],corrFlank[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
-            elif i == 3:
-                # Calls the flanker task function with the following order of inputs:
+            elif i == 2:
+                # Calls the dot task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
                 mental_response = dots_cond(coherDots[param],direcDots[param],corrDots[param],win,length)
                 isi.draw()
@@ -185,24 +197,24 @@ for k in iti_order:
 
             ## mental_response processing
             # if space was pressed, break the loop and log it as a 1 (quit), otherwise log correct/incorrect responses onto resp_log as coded above
-            if mental_response == 3:
+            if mental_response == 3: # if missed
                 miss += 1
 
-            if mental_response == 1:
+            if mental_response == 1: # if quit
                 needs_reward = False
                 # update logs
-                iti_log.append(k)
+                iti_log.append(str(handling))
                 rwd_log.append(j)
-                deci_log.append(2)
+                deci_log.append(0)
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
                 break
-            elif miss > 2: #or mental_response == 1:
+            elif miss > 2:
                 needs_reward = False
                 # update logs
-                iti_log.append(k)
+                iti_log.append(str(handling))
                 rwd_log.append(j)
-                deci_log.append(3)
+                deci_log.append(2)
                 rt_log.append(str(blockClock.getTime()))
                 totime_log.append(str(globalClock.getTime()))
                 break
@@ -210,7 +222,7 @@ for k in iti_order:
         # Give reward once block is completed
         if needs_reward:
             # update logs
-            iti_log.append(k)
+            iti_log.append(str(handling))
             rwd_log.append(j)
             deci_log.append(1)
             rt_log.append(str(blockClock.getTime()))
@@ -223,25 +235,26 @@ for k in iti_order:
             core.wait(2)
 
         # ITI (traveling)
-        travel1.setWidth((k*60)/1000)
+        travel1.setWidth((travel*frames)/1000)
         travel1.setAutoDraw(True)
         traveling.setAutoDraw(True)
         win.flip()
-        for i in range(k*60):
+        for i in range(travel*frames):
             travel2.setWidth(i/1000)
             travel2.draw()
             win.flip()
         traveling.setAutoDraw(False)
         travel1.setAutoDraw(False)
 
-        if counter == 5:
+        if counter == 6:
             counter = 0
         else:
             counter += 1
 ## log writting on csv file
 with open(filename+'_log.csv','wb') as logfile:
     logwriter = csv.writer(logfile, delimiter=',')
-    logwriter.writerow(('ITI','Expected Reward','Decision (1=complete; 2=quit; 3=failed)','RT','Total Time'))
+    # had to eliminate the statement below because the header was causing issues while loading into Matlab
+    # logwriter.writerow(('ITI','Expected Reward','Decision (0=quit;1=complete; 2=failed)','RT','Total Time'))
     for i in range(len(iti_log)):
         logwriter.writerow((iti_log[i],rwd_log[i],deci_log[i],rt_log[i],totime_log[i]))
     logwriter.writerow(('Total reward = $',reward_amount))
