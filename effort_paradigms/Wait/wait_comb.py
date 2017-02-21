@@ -67,8 +67,7 @@ iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.08,pos=(0.
 reward_amount = 0
 ## task lengths
 length = 1.5 # for each mental task
-wait_length = 10 # for the waiting block
-blockLength = 150 # how long in seconds each iti block will be
+blockLength = 120 # how long in seconds each iti block will be
 ## Log aggregators, output as csv
 iti_log = [] # what iti block we're in
 rwd_log = [] # current reward opportunity
@@ -77,14 +76,16 @@ rt_log = [] # within-trial time of decision/completion
 totime_log = [] # absolute time throughout the experimental session
 
 ### Order of the conditions and the mental tasks
-iti_order = [[2,13],[2,13],[5,10],[5,10],[10,5],[10,5],[13,2],[13,2]]
+## Changed the time combos so they can be divisible by 2 in the mental effort ver.
+#iti_order = [[2,13],[2,13],[5,10],[5,10],[10,5],[10,5],[13,2],[13,2]]
+iti_order = [[2,14],[2,14],[6,10],[6,10],[10,6],[10,6],[14,2],[14,2]]
 shuffle(iti_order)
 rewardOrder = [0.05,0.05,0.15,0.15,0.25,0.25]
 
 ##----------------------- Begin experiment ---------------------------------
 
 # initial window, waits for input to begin the experiment
-start = visual.TextStim(win, text='Remember: respond with the left or right keys \n' + 'Press space to quit each condition \n'+'Press ENTER to begin',height=0.05)
+start = visual.TextStim(win, text='Press space to quit a trial \n'+'Press ENTER to begin',height=0.05)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
@@ -125,7 +126,7 @@ for k in range(len(iti_order)):
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
-        # Calls the wait block function, wait_length = length of block
+        # Calls the wait block function, handling = length of block
         wait_response = wait_cond(win,handling)
 
         ## Wait block response processing
@@ -147,7 +148,7 @@ for k in range(len(iti_order)):
             totime_log.append(str(globalClock.getTime()))
             # update the reward earned so far
             reward_amount += j
-            reward.setText('You earned $'+str(j))
+            reward.setText('Trial completed \n' + 'You earned $'+str(j))
             reward.draw()
             win.flip()
             core.wait(2)
