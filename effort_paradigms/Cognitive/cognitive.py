@@ -14,9 +14,7 @@ import os  # handy system and path functions
 import sys  # to get file system encoding
 import csv
 import time
-from stroop_cond import stroop_cond
-from flanker_cond import flanker_cond
-from dots_cond import dots_cond
+import tasks
 from random import randint
 
 
@@ -114,9 +112,8 @@ condfile.close()
 ### Order of the conditions and the mental tasks
 # each combo is [travel,handling]
 # iti_order = [1,1,3,3,5,5,8,8]
-iti_order = [[2,13],[2,13],[5,10],[5,10],[10,5],[10,5],[13,2],[13,2]]
+iti_order = [[2,14],[2,14],[6,10],[6,10],[10,6],[10,6],[14,2],[14,2]]
 shuffle(iti_order)
-#mentalOrder = [1,2,3,1,2] # each task is 2s, so having 5 equals 10 second trials
 rewardOrder = [0.05,0.05,0.15,0.15,0.25,0.25]
 
 ##----------------------- Begin experiment ---------------------------------
@@ -176,21 +173,21 @@ for k in range(len(iti_order)):
                 # Calls the stroop task function with the following order of inputs:
                 # (word color, word, color on the left, color on the right, correct answer left-right, win (window),time of task)
                 ## IMPORTANT: to return timestamps along with the answer, use a tuple like: '(mental_response, RT) = stroop_cond(etc)'
-                mental_response = stroop_cond(stroopColor[param],stroopWord[param],leftColor[param],rightColor[param],corrStroop[param],win,length)
+                mental_response = tasks.stroop_cond(stroopColor[param],stroopWord[param],leftColor[param],rightColor[param],corrStroop[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 1:
                 # Calls the flanker task function with the following order of inputs:
                 # (flanker type, correct answer left-right, win (window),time of task)
-                mental_response = flanker_cond(flankType[param],corrFlank[param],win,length)
+                mental_response = tasks.flanker_cond(flankType[param],corrFlank[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)
             elif i == 2:
                 # Calls the dot task function with the following order of inputs:
                 # (coherence, direction of dots, correct answer left (180)-right (360), win (window),time of task)
-                mental_response = dots_cond(coherDots[param],direcDots[param],corrDots[param],win,length)
+                mental_response = tasks.dots_cond(coherDots[param],direcDots[param],corrDots[param],win,length)
                 isi.draw()
                 win.flip()
                 core.wait(0.5)

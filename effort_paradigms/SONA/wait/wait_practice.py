@@ -15,7 +15,7 @@ import os  # handy system and path functions
 import sys  # to get file system encoding
 import csv
 import time
-from wait_cond  import wait_cond
+import exp_functions
 from random import randint
 
 
@@ -67,20 +67,14 @@ iti = visual.TextStim(win=win,text='Travel time = x seconds',height=0.08,pos=(0.
 reward_amount = 0
 ## task lengths
 length = 1.5 # for each mental task
-blockLength = 150 # how long in seconds each iti block will be
-## Log aggregators, output as csv
-iti_log = [] # what iti block we're in
-rwd_log = [] # current reward opportunity
-deci_log = [] # did they quit (0), complete (1), or fail (2) the block
-rt_log = [] # within-trial time of decision/completion
-totime_log = [] # absolute time throughout the experimental session
+blockLength = 120 # how long in seconds each iti block will be
 
 ### Order of the conditions and the mental tasks
 ## Changed the time combos so they can be divisible by 2 in the mental effort ver.
 #iti_order = [[2,13],[2,13],[5,10],[5,10],[10,5],[10,5],[13,2],[13,2]]
-iti_order = [[2,14],[2,14],[6,10],[6,10],[10,6],[10,6],[14,2],[14,2]]
-shuffle(iti_order)
-rewardOrder = [0.05,0.05,0.15,0.15,0.25,0.25]
+iti_order = [[4,8]] #,[2,14],[6,10],[6,10],[10,6],[10,6],[14,2],[14,2]]
+#shuffle(iti_order)
+rewardOrder = [5,5,10,10,25,25]
 
 ##----------------------- Begin experiment ---------------------------------
 
@@ -101,11 +95,9 @@ for k in range(len(iti_order)):
     isi.draw()
     win.flip()
     core.wait(1)
-    # this part could possibly be recoded with % placeholders
     iti.setText('Handling time ='+' '+str(handling)+' '+'seconds \n'+'Travel time ='+' '+str(travel)+' '+'seconds')
     travel1.setWidth((travel*60)/1000)
     travel1.setFillColor('green')
-    #travel1.setAutoDraw(True)
     iti.draw()
     travel1.draw()
     win.flip()
@@ -121,35 +113,23 @@ for k in range(len(iti_order)):
         j = rewardOrder[counter]
         needs_reward = True # changes to False if the participant quits the block
         blockClock = core.Clock() # sets a timer for the trial
-        message = visual.TextStim(win, text=' Next reward = $'+str(j), height=0.08)
+        message = visual.TextStim(win, text=' Next reward = '+str(j)+' points', height=0.08)
         message.draw()
         win.flip()
         core.wait(2)
         if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
             core.quit()
         # Calls the wait block function, handling = length of block
-        wait_response = wait_cond(win,handling)
+        wait_response = exp_functions.waitCondition(win,handling)
 
         ## Wait block response processing
         if wait_response == 1: # if quit
             needs_reward = False
-            # update logs
-            iti_log.append(str(handling))
-            rwd_log.append(j)
-            deci_log.append(0)
-            rt_log.append(str(blockClock.getTime()))
-            totime_log.append(str(globalClock.getTime()))
         else:
             # Give reward once block is completed
-            # update logs
-            iti_log.append(str(handling))
-            rwd_log.append(j)
-            deci_log.append(1)
-            rt_log.append(str(blockClock.getTime()))
-            totime_log.append(str(globalClock.getTime()))
             # update the reward earned so far
             reward_amount += j
-            reward.setText('Trial completed \n' + 'You earned $'+str(j))
+            reward.setText('Trial completed \n' + 'You earned '+str(j)+' points')
             reward.draw()
             win.flip()
             core.wait(2)
@@ -160,6 +140,8 @@ for k in range(len(iti_order)):
         traveling.setAutoDraw(True)
         win.flip()
         for i in range(travel*60):
+            if event.getKeys(keyList=['escape']): #this syntax can be used in the future in case we want to allow quitting during cues
+                core.quit()
             travel2.setWidth(i/1000)
             travel2.draw()
             win.flip()
@@ -170,19 +152,10 @@ for k in range(len(iti_order)):
             counter = 0
         else:
             counter += 1
-    #travel1.setAutoDraw(False)
-## log writting on csv file
-with open(filename+'_log.csv','wb') as logfile:
-    logwriter = csv.writer(logfile, delimiter=',')
-    # had to eliminate the statement below because the header was causing issues while loading into Matlab
-    #logwriter.writerow(('ITI','Expected_Reward','Decision (0=quit;1=complete; 2=failed)','RT','Total_Time'))
-    for i in range(len(iti_log)):
-        logwriter.writerow((iti_log[i],rwd_log[i],deci_log[i],rt_log[i],totime_log[i]))
-    logwriter.writerow(('Total_reward=$',reward_amount))
-logfile.close()
+
 
 ## Final screen showing final reward amount
-start = visual.TextStim(win, text='Great work! You earned $' + str(reward_amount),height=0.08)
+start = visual.TextStim(win, text='Great work! You earned ' + str(reward_amount) + ' points',height=0.08)
 start.draw()
 win.flip()
 event.waitKeys(keyList=['return'])
