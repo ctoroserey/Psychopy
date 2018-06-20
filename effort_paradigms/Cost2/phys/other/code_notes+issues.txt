@@ -1,0 +1,83 @@
+
+== slow to update the text of the countdown clock ==
+
+per psychopy documentation, TextStim objects are slow when text is updated.
+in tests, we see occasional skipped frames at whole-second times when the clock updates. 
+	(and some other times, presumably when the amount updates)
+tried using a TextBox object instead, but it seems buggy; truncated the text. 
+
+== quick sampling from LabJack ==
+
+initially was using streaming.
+	configured with resolution = 3, sampleFrequency = 20,000
+	should collect 1200 samples, which should take 60 ms. 
+	accordingly, testing shows each video frame lasts 3-4 refreshes
+		(4 refreshes -> 67 ms, effectively 15 Hz). 
+it is possible to set LabJack.packetsPerRequest
+	by default, this is set to 1 if samplesPerPacket < 25
+		...otherwise set for 1 request per s, up to 48 packetsPerRequest.
+the problem:
+	-> if requesting more samples than available in the buffer, execution pauses till they come in. 
+		*up to a fixed timeout value of 1 s, beyond which there is underflow. 
+	-> if requesting fewer, the uncollected samples will be collected next time inducing a lag. 
+this code has references to both "WAIT_MODE" and "CLEAR_STREAM_CHANNELS"
+	http://www.mathworks.com/matlabcentral/fileexchange/27597-labjacku3?focused=5153040&tab=function 
+	it turns out these are only available with the Windows driver, not the exodriver.
+	https://forums.labjack.com/index.php?showtopic=5435
+
+*one strategy:
+stream fast enough to mostly fill and empty the buffer on each refresh. 
+set SampleFrequency to 50,000, which should give a little over 800 samples every 16 ms
+set SamplesPerPacket to 25 and d.packetsPerRequest to 32, to collect 800 samples. 
+then only use the last 600 samples. 
+	since the buffer holds up to 984 samples, there should be at most 184 hold samples held over. 
+issue: some high outliers in the list of returned samples (indicator values of some kind?)
+	sort of fixed by using the median rather than the mean, but the meter in the real experiment looks jitter / quantized -- it'd be better to remove outliers and take the mean. 
+	consistently took 2 refreshes per frame. 
+
+*evaluating the strategy of command/response mode. 
+EDITS to implement this:
+	-> uncomment the hgInputCR line in the 2 detectResponse functions. 
+	-> likewise in handgrip.maxGrip
+	-> comment out streamStart and streamStop x2 in both handgrip.maxGrip and wtw.showTrials
+results on the first pass:
+	-> about 30-40% 1 refresh, 60-70% 2 refreshes per frame. 
+	-> meter needle is too wiggly. 
+	-> this was with just 1 sample. 
+trying with 8 samples. 
+	-> stability of the meter is acceptable. 
+	-> mostly 3 refreshes per video frame (a few higher outliers). 
+	-> timing test script says this takes 42 ms - that fits. 
+		*turned out this was because "LongSettling" was set to true. 
+			(that probably helped with stability)
+	-> without LongSettling (and with 8 samples) it's 16 ms; probably still too slow. 
+	-> with 4 samples it's too jittery, but most (~95%) frames only last one refresh. 
+
+-> what if we used a getFeedback command instead of getAIN?
+	- no noticeable change in the latency. 
+
+*back to streaming; try setting the rate to something more reasonable.
+	aiming to allow data input to overlap with other processing
+	(since we need a lot of samples b/c of the noise)
+want to err on the side of requesting slightly more samples than collected in each refresh. 
+so want to collect slightly fewer than 25 samples in 17 ms
+1400 Hz: -> 23.8 samples in 17 ms. 
+25 samples should take 17.86 ms
+	timing test shows median interval is 17.9 ms, occasionally up to 18.2 ms. 
+
+*used python threading to create a LIFO streaming queue
+	a process in a thread reads values into a LIFO queue (slightly faster than one packet per refresh)
+	the main thread reads one packet from the queue per refresh cycle. 
+	this gives good results:
+		- reasonably stable meter needle. 
+		- good timing, only occasional missed frames related to changing the clock text. 
+
+
+
+
+
+
+
+
+
+

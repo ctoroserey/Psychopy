@@ -1,0 +1,9 @@
+Red,red,red,green,left,><>,left,0.4,180,left
+Red,green,red,green,right,">>>><>>>>",left,0.4,180,left
+Red,blue,blue,red,left,>>>><>>>>,left,0.3,180,left
+Green,green,green,blue,left,>>>,right,0.3,180,left
+Green,blue,green,blue,right,">>>>>>>>>",right,0.4,360,right
+Green,red,red,green,left,>>>>>>>,right,0.4,360,right
+Blue,blue,red,blue,right,">>>>>>>>>><>>>>>>>>>>",left,0.3,360,right
+Blue,red,blue,red,right,">>>>>>>>>>>>>>>>>>>>>",right,0.3,360,right
+Blue,green,green,blue,left,>>>>>><>>>>>>,left,0.3,360,right

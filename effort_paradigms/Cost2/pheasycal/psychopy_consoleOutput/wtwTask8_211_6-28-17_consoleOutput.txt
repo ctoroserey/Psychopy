@@ -1,0 +1,14 @@
+Welcome to PsychoPy2!
+v1.85.1
+
+##### Running: /Users/cdlab-admin/Documents/lab_tasks/wtw_port/wtwTask.py ######
+2017-06-28 14:55:33.642 python[1486:38355] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/wf/3_hvnjz14_qd_j6404vsjvyw0000gn/T/org.psychopy.PsychoPy2.savedState
+Block duration: 900 s
+measured frame rate: 
+60.342404659
+calibration results:
+{'grip': [0.33291960200000004, 0.33656824000000007, 0.41713612400000005], 'relax': [0.21608872400000004, 0.21579087600000002, 0.21891828000000002, 0.21981182400000002]}
+calibration results:
+{'grip': [0.39018088000000001, 0.38199006000000002, 0.36709766000000005], 'relax': [0.21876935600000003, 0.219365052, 0.21772688800000004, 0.21757796400000001]}
+grip force threshold: 0.2509965096
+Total earned: $15.60

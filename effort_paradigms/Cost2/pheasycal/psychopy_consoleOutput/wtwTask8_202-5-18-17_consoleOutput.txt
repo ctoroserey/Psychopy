@@ -1,0 +1,25 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf460
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Welcome to PsychoPy2!\
+v1.83.04\
+\
+##### Running: /Users/cdlab-admin/Documents/lab_tasks/wtw_port/wtwTask.py ######\
+2017-05-18 13:32:40.738 python[437:10710] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/wf/3_hvnjz14_qd_j6404vsjvyw0000gn/T/org.psychopy.PsychoPy2.savedState\
+Block duration: 900 s\
+measured frame rate: \
+60.0983225559\
+calibration results:\
+\{'grip': [0.29412490000000002, 0.24885200400000002, 0.36069392800000005], 'relax': [0.214003788, 0.22085429200000004, 0.21504625600000002, 0.214003788]\}\
+calibration results:\
+\{'grip': [0.31750596800000003, 0.2680632, 0.21772688800000004], 'relax': [0.21415271200000002, 0.21742904000000002, 0.21370594000000004, 0.21325916800000003]\}\
+calibration results:\
+\{'grip': [0.42085922400000009, 0.34833323600000005, 0.34520583199999999], 'relax': [0.21638657200000003, 0.21459948400000001, 0.214003788, 0.21489733200000002]\}\
+calibration results:\
+\{'grip': [0.35309880400000004, 0.41400872, 0.43396453600000007], 'relax': [0.21445056000000001, 0.21593980000000002, 0.21459948400000001, 0.21385486400000001]\}\
+grip force threshold: 0.2743701314\
+Total earned: $15.40\
+}

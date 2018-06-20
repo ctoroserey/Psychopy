@@ -1,0 +1,18 @@
+
+2017-05-18, ~9am, 200
+- acqknowledge stopped recording after 30 min (midway through 2nd block)
+- psychopy completed the experiment but didn't exit properly
+	-> took a long time to close the window
+	-> partly closed but left open processes; required restart. 
+
+2017-05-18, ~10:30am, 201
+2017-05-18, ~1:30pm, 202
+
+after the first 3 subjects, some edits.
+	-> dropped grip threshold fraction from 0.3 to 0.25 (and made it a parameter at the top)
+	-> added a post-block message ("Block 1 complete...")
+	-> turned off logging for progress bar, meter needle, time left text, and calibration meter.
+	-> added names when creating objects (for logging)
+	-> removed unused instructions code
+	-> created an alternative experiment handler to keep instruction trials out of the main data file
+	-> let the timing distribution be specified just once for all blocks

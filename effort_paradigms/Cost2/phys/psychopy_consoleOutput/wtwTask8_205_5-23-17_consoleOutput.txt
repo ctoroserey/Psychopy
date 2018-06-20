@@ -1,0 +1,50 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Welcome to PsychoPy2!\
+v1.83.04\
+\
+######## Running: /Users/cdlab-admin/Documents/lab_tasks/Leah/SPtask.py ########\
+2017-05-23 09:07:08.221 python[535:8171] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/wf/3_hvnjz14_qd_j6404vsjvyw0000gn/T/org.psychopy.PsychoPy2.savedState\
+objc[535]: Class SDLTranslatorResponder is implemented in both /Applications/PsychoPy2.app/Contents/Frameworks/libSDL-1.2.0.dylib and /Applications/PsychoPy2.app/Contents/Frameworks/SDL.framework/Versions/A/SDL. One of the two will be used. Which one is undefined.\
+objc[535]: Class SDL_QuartzWindow is implemented in both /Applications/PsychoPy2.app/Contents/Frameworks/libSDL-1.2.0.dylib and /Applications/PsychoPy2.app/Contents/Frameworks/SDL.framework/Versions/A/SDL. One of the two will be used. Which one is undefined.\
+objc[535]: Class SDL_QuartzWindowDelegate is implemented in both /Applications/PsychoPy2.app/Contents/Frameworks/libSDL-1.2.0.dylib and /Applications/PsychoPy2.app/Contents/Frameworks/SDL.framework/Versions/A/SDL. One of the two will be used. Which one is undefined.\
+objc[535]: Class SDL_QuartzView is implemented in both /Applications/PsychoPy2.app/Contents/Frameworks/libSDL-1.2.0.dylib and /Applications/PsychoPy2.app/Contents/Frameworks/SDL.framework/Versions/A/SDL. One of the two will be used. Which one is undefined.\
+\
+##### Running: /Users/cdlab-admin/Documents/lab_tasks/wtw_port/wtwTask.py ######\
+2017-05-23 09:07:25.149 python[576:8483] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/wf/3_hvnjz14_qd_j6404vsjvyw0000gn/T/org.psychopy.PsychoPy2.savedState\
+handle: None\
+LabJack U3 not connected\
+Block duration: 900 s\
+WARNING: handgrip device not available.\
+measured frame rate: \
+None\
+18.8570 	WARNING 	Couldn't measure a consistent frame rate.\
+  - Is your graphics card set to sync to vertical blank?\
+  - Are you running other processes on your computer?\
+\
+19.2401 	WARNING 	t of last frame was 32.73ms (=1/30)\
+19.2773 	WARNING 	t of last frame was 37.24ms (=1/26)\
+19.3403 	WARNING 	t of last frame was 32.79ms (=1/30)\
+19.3777 	WARNING 	t of last frame was 37.36ms (=1/26)\
+19.4404 	WARNING 	Multiple dropped frames have occurred - I'll stop bothering you about them!\
+21.3793 	WARNING 	Couldn't measure a consistent frame rate.\
+  - Is your graphics card set to sync to vertical blank?\
+  - Are you running other processes on your computer?\
+\
+\
+##### Running: /Users/cdlab-admin/Documents/lab_tasks/wtw_port/wtwTask.py ######\
+2017-05-23 09:08:32.629 python[620:9062] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/wf/3_hvnjz14_qd_j6404vsjvyw0000gn/T/org.psychopy.PsychoPy2.savedState\
+Block duration: 900 s\
+measured frame rate: \
+60.2072794713\
+calibration results:\
+\{'grip': [0.44051719200000006, 0.21340809200000002, 0.45123972000000001], 'relax': [0.21430163600000002, 0.21325916800000003, 0.21251454800000003, 0.213110244]\}\
+calibration results:\
+\{'grip': [0.44453814000000008, 0.43098605600000006, 0.43768763600000005], 'relax': [0.21370594000000004, 0.21296132000000001, 0.21251454800000003, 0.21221670000000004]\}\
+grip force threshold: 0.2689753595\
+Total earned: $14.10\
+}
